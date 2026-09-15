@@ -18,6 +18,7 @@ export const STAGES_LIST = [
 export const ROLES_LIST = [
   { id: 'SUPER_ADMIN', name: 'Super Admin / Ministry Joint Secretary', level: 'National', scope: 'Full Access across all 11 stages & settings' },
   { id: 'LAND_OFFICER', name: 'Land Nodal Officer', level: 'District/Tehsil', scope: 'Land identification, verification & proposal submission' },
+  { id: 'MUNICIPAL_OFFICER', name: 'Municipal Officer (ULB Nodal)', level: 'Municipal', scope: 'Urban masterplan zoning, municipal parcel verification & NOC sign-off' },
   { id: 'CITIZEN', name: 'Citizen / Landowner Portal', level: 'Public', scope: 'ULPIN lookup, DBT payment status & Section 3C objection filing' }
 ];
 

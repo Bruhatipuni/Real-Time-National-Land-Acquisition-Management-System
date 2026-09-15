@@ -38,6 +38,16 @@ export const PRESET_ROLES = [
     description: 'ULPIN Bhu-Aadhaar plot tagging, boundary verification, drone survey & proposal filing.'
   },
   {
+    id: 'MUNICIPAL_OFFICER',
+    title: 'Municipal Officer (ULB Nodal)',
+    department: 'Urban Local Body / Municipal Corporation',
+    user: 'Sanjay Deshmukh (Municipal Officer)',
+    icon: Building,
+    badge: 'URBAN & MUNICIPAL',
+    badgeColor: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
+    description: 'Urban masterplan zoning, municipal land parcel verification & building NOC approvals.'
+  },
+  {
     id: 'CITIZEN',
     title: 'Citizen / Displaced Landowner',
     department: 'Public Citizen Portal',
