@@ -783,7 +783,7 @@ export default function FieldSurveyMode({ parcel, onBack, onUpdateParcel }) {
                 {layers.surveyorLocation && (
                   <Marker 
                     position={[currentParcel.currentLatitude || 28.2478, currentParcel.currentLongitude || 77.0654]}
-                    icon={surveyorLocationIcon}
+                    icon={getSurveyorLocationIcon()}
                   >
                     <Popup>
                       <div className="text-xs p-1 font-mono">
