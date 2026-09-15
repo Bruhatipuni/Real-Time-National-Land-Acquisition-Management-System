@@ -3,26 +3,39 @@ import { Bot, X, Send, Sparkles, User, HelpCircle, ArrowRight, ShieldCheck } fro
 import { formatINR } from '../utils/compensationEngine';
 import { getNextActionDetails } from './citizen/citizenData';
 
-export default function BhuSathiChatbot({ parcels, selectedParcel }) {
+export default function BhuSathiChatbot({ parcels, selectedParcel, currentUser, activeTab }) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
 
   const activeParcel = selectedParcel || parcels[0];
   const nextAction = getNextActionDetails(activeParcel.status, activeParcel);
 
+  const isSurveyorMode = activeTab === 'surveyor' || currentUser?.roleObj?.id === 'LAND_OFFICER';
+
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: `Namaste ${activeParcel.ownerName}! I am your AI Bhu-Sathi Assistant for BHOOMISETU. I am currently synched with your parcel Plot ${activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}). How can I assist you with your land acquisition, compensation award, or hearing schedule today?`
+      text: isSurveyorMode
+        ? `Namaste Surveyor! I am your AI Field Survey Assistant for BHUSETU DGPS / CORS workbench. Synced with CORS Network Station DL-ROHINI-04. How can I assist with GNSS coordinates, boundary mismatch analysis, route planning, or Form VII-A reporting?`
+        : `Namaste ${activeParcel.ownerName}! I am your AI Bhu-Sathi Assistant for BHOOMISETU. I am currently synched with your parcel Plot ${activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}). How can I assist you with your land acquisition, compensation award, or hearing schedule today?`
     }
   ]);
 
-  const quickPrompts = [
+  const citizenQuickPrompts = [
     "Why haven't I received my compensation?",
     "What happens next for my land?",
     "When is my legal hearing?",
     "Explain my solatium calculation"
   ];
+
+  const surveyorQuickPrompts = [
+    "Which parcels have boundary mismatches?",
+    "Show pending surveys within 5 km",
+    "Generate today's survey report",
+    "Which surveys have deadlines this week?"
+  ];
+
+  const quickPrompts = isSurveyorMode ? surveyorQuickPrompts : citizenQuickPrompts;
 
   const handleSend = (textToSend) => {
     const queryText = (typeof textToSend === 'string' ? textToSend : input).trim();
@@ -37,7 +50,38 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
     setTimeout(() => {
       let botReply = "";
 
-      if (query.includes('compensation') || query.includes('why haven') || query.includes('payment') || query.includes('dbt') || query.includes('money')) {
+      // Surveyor-specific queries
+      if (isSurveyorMode && (query.includes('boundary') || query.includes('mismatch') || query.includes('deviation') || query.includes('encroach') || query.includes('tolerance'))) {
+        botReply = `🛰️ Boundary & Area Mismatch Intelligence (Statutory Tolerance: ±1.5%):\n\n` +
+          `• LND-00125 (Kherki Daula): Measured 2.48 Ha vs 2.43 Ha (+2.06% deviation) - Exceeds 1.5% threshold. Collector review required.\n` +
+          `• LND-00126 (Manesar): Measured 1.76 Ha vs 1.82 Ha (-3.29% deviation) - Encroachment along Western Canal boundary (Points P3-P4).\n` +
+          `• LND-00128 (Badshahpur): Measured 1.85 Ha vs 1.80 Ha (+2.78% deviation) - Dense tree foliage caused GNSS multipath error; re-survey scheduled.\n` +
+          `• LND-00127 & LND-00130: Within statutory tolerance (0.00% and -0.76%). Verification passed!`;
+      }
+      else if (isSurveyorMode && (query.includes('5 km') || query.includes('route') || query.includes('nearby') || query.includes('pending survey') || query.includes('plan'))) {
+        botReply = `📍 Optimized Field Survey Route Plan:\n\n` +
+          `• Hub: District Collectorate Field Camp (28.4595° N, 77.0266° E)\n` +
+          `• Total Parcels: 6 Parcels queued along Dwarka Expressway & CPR\n` +
+          `• Waypoint Sequence: Field Camp → LND-00125 (Kherki Daula) → LND-00126 (Manesar) → LND-00127 → LND-00128 → LND-00130 → Return to Camp\n` +
+          `• Total Route Distance: 38.4 km | Est. Travel & Survey Time: 5 hrs 20 mins\n\n` +
+          `Click the "Field Route (6 Parcels)" button on the Surveyor Workbench header to open the interactive map and export GPX waypoints.`;
+      }
+      else if (isSurveyorMode && (query.includes('report') || query.includes('form vii') || query.includes('generate') || query.includes('certificate'))) {
+        botReply = `📄 Form VII-A Statutory Land Survey & Demarcation Certificate:\n\n` +
+          `• Format: Prescribed Government of India statutory field survey certificate.\n` +
+          `• Includes: 14-digit ULPIN Bhu-Aadhaar, WGS-84 UTM Zone 43N coordinates table, RTK fix accuracies (±1.8m), variance computation, geo-tagged watermarked evidence photos, and owner Aadhaar verification.\n` +
+          `• Signature: Surveyor Digital Signature + CALA Land Officer Counter-signature with QR verification code.\n\n` +
+          `Click "Official Survey Report (Form VII-A)" or the "Report" button on any parcel row to view and print the statutory PDF.`;
+      }
+      else if (isSurveyorMode && (query.includes('deadline') || query.includes('week') || query.includes('urgent') || query.includes('today'))) {
+        botReply = `⏰ High Priority Survey Deadlines:\n\n` +
+          `1. LND-00125 (Plot 402/1, Kherki Daula): DEADLINE TODAY 17:00 IST (Interchange Corridor - Critical Path)\n` +
+          `2. LND-00126 (Plot 188/3, Manesar): DEADLINE 16 SEP 2026 12:00 IST (Encroachment verification)\n` +
+          `3. LND-00128 (Plot 512, Badshahpur): DEADLINE 18 SEP 2026 18:00 IST (Re-survey with total station)\n\n` +
+          `Recommended: Open "My Assigned Parcels", filter by "High Priority" or "Today", and tap "START SURVEY".`;
+      }
+      // Citizen & general queries
+      else if (query.includes('compensation') || query.includes('why haven') || query.includes('payment') || query.includes('dbt') || query.includes('money')) {
         const dbtMsg = activeParcel.dbtStatus === 'DISBURSED_100'
           ? `✓ 100% Funds Credited via Direct Benefit Transfer (DBT) to ${activeParcel.bankName} (Ref: ${activeParcel.dbtTransactionId || "DBT2026091299841"}) on ${activeParcel.dbtDate || "08 Sep 2026"}.`
           : `⏳ Payment is in Bank Verification / Escrow Queue under PFMS. Next step is finance disbursement approval.`;
@@ -81,7 +125,9 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
           `• Boundary: Digitally mapped and verified by Survey of India drone orthomosaics.`;
       }
       else {
-        botReply = `Under the RFCTLARR Act 2013 and National Highways Act 1956, land acquisition guarantees 100% compulsory solatium, transparent ULPIN GIS demarcation, and direct bank payouts. How can I help you specifically regarding Plot ${activeParcel.surveyNo}?`;
+        botReply = isSurveyorMode
+          ? `As your DGPS / RTK Field Survey Assistant, I can help analyze boundary deviations, calculate parcel acreage, format coordinate tables, or provide dispute resolution protocols under Survey of India DILRMP guidelines. How can I help?`
+          : `Under the RFCTLARR Act 2013 and National Highways Act 1956, land acquisition guarantees 100% compulsory solatium, transparent ULPIN GIS demarcation, and direct bank payouts. How can I help you specifically regarding Plot ${activeParcel.surveyNo}?`;
       }
 
       setMessages(prev => [...prev, { sender: 'bot', text: botReply }]);

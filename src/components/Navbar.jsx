@@ -17,7 +17,8 @@ import {
   Activity,
   Globe,
   Clock,
-  ExternalLink
+  ExternalLink,
+  Crosshair
 } from 'lucide-react';
 import { PRESET_ROLES } from './LoginModal';
 
@@ -67,6 +68,13 @@ export default function Navbar({
       icon: Map, 
       badge: 'Live GIS',
       roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'PROJECT_OFFICER'] 
+    },
+    { 
+      id: 'surveyor', 
+      label: 'Surveyor Workbench', 
+      icon: Crosshair, 
+      badge: 'DGPS / RTK',
+      roles: ['SUPER_ADMIN', 'LAND_OFFICER', 'STATE_ADMIN', 'DISTRICT_OFFICER'] 
     },
     { 
       id: 'workflow', 
