@@ -40,7 +40,7 @@ app.post('/api/auth/login', (req, res) => {
     user: {
       id: "USR-101",
       name: roleObj.name.split('(')[0].trim(),
-      email: email || `${roleId.toLowerCase()}@bhusetu.gov.in`,
+      email: email || `${roleId.toLowerCase()}@bhoomisetu.gov.in`,
       role: roleId,
       roleObj
     }
@@ -270,7 +270,7 @@ app.get('*', (req, res, next) => {
 
 if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(PORT, () => {
-    console.log(`BHUSETU Full-Stack REST Server running on http://localhost:${PORT}`);
+    console.log(`BhoomiSetu Full-Stack REST Server running on http://localhost:${PORT}`);
   });
 }
 

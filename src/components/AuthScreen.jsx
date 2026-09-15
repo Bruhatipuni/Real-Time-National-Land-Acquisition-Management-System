@@ -29,7 +29,7 @@ export default function AuthScreen({ onLoginSuccess }) {
     const roleObj = PRESET_ROLES.find(r => r.id === selectedRoleId) || PRESET_ROLES[0];
     onLoginSuccess({
       name: fullName || roleObj.user,
-      email: email || `${selectedRoleId.toLowerCase()}@bhusetu.gov.in`,
+      email: email || `${selectedRoleId.toLowerCase()}@bhoomisetu.gov.in`,
       roleObj
     });
   };
@@ -62,7 +62,7 @@ export default function AuthScreen({ onLoginSuccess }) {
     const roleObj = PRESET_ROLES.find(r => r.id === roleId);
     onLoginSuccess({
       name: roleObj.user,
-      email: `${roleId.toLowerCase()}@bhusetu.gov.in`,
+      email: `${roleId.toLowerCase()}@bhoomisetu.gov.in`,
       roleObj
     });
   };
@@ -81,7 +81,7 @@ export default function AuthScreen({ onLoginSuccess }) {
             <Building2 className="w-8 h-8 text-slate-950" />
           </div>
           <h1 className="text-3xl font-black font-mono tracking-tight text-white">
-            BHU<span className="text-amber-500">SETU</span>
+            BHOOMI<span className="text-amber-500">SETU</span>
           </h1>
           <p className="text-sm font-black text-amber-400 italic">
             "Your Land, Our Responsibility"
@@ -119,7 +119,7 @@ export default function AuthScreen({ onLoginSuccess }) {
                     <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
                     <input
                       type="email"
-                      placeholder="officer@bhusetu.gov.in"
+                      placeholder="officer@bhoomisetu.gov.in"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-slate-950 border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
@@ -166,7 +166,7 @@ export default function AuthScreen({ onLoginSuccess }) {
                 <div className="pt-3 border-t border-slate-800 space-y-2">
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block text-center">Quick One-Click Demo Access</span>
                   <div className="grid grid-cols-2 gap-1.5">
-                    {PRESET_ROLES.filter(r => ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'CITIZEN'].includes(r.id)).map((role) => (
+                    {PRESET_ROLES.map((role) => (
                       <button
                         type="button"
                         key={role.id}
@@ -270,7 +270,7 @@ export default function AuthScreen({ onLoginSuccess }) {
               </div>
               <h4 className="text-sm font-bold text-white">Registration Successful!</h4>
               <p className="text-xs text-slate-400">
-                Encrypted RBAC identity generated. Launching BHUSETU Platform...
+                Encrypted RBAC identity generated. Launching BHOOMISETU Platform...
               </p>
             </div>
           )}

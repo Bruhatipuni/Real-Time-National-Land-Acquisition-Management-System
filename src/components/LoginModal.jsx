@@ -28,64 +28,24 @@ export const PRESET_ROLES = [
     description: 'National overview, portfolio approval, heatmaps, fund allocation & policy decision support.'
   },
   {
-    id: 'STATE_ADMIN',
-    title: 'State Admin (State Secretary)',
-    department: 'Revenue & Land Reforms Department',
-    user: 'Smt. Anita Deshmukh (State Secretary)',
-    icon: Building,
-    badge: 'STATE ADMIN',
-    badgeColor: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-    description: 'Statewide approval, land revenue record verification & statutory notices oversight.'
-  },
-  {
-    id: 'DISTRICT_OFFICER',
-    title: 'District Officer / Collector (LAO)',
-    department: 'Office of District Collector, Gurugram',
-    user: 'Shri Vikramaditya Singh (District Collector)',
-    icon: ShieldCheck,
-    badge: 'DISTRICT APPROVER',
-    badgeColor: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-    description: 'Proposal review, district approval, Section 3G solatium award signing & vesting orders.'
-  },
-  {
     id: 'LAND_OFFICER',
-    title: 'Land Nodal Officer',
+    title: 'Surveyor',
     department: 'Survey & Land Revenue Nodal',
-    user: 'Anish Kumar (Land Officer)',
+    user: 'Anish Kumar (Surveyor)',
     icon: MapPin,
     badge: 'FIELD & SURVEY',
     badgeColor: 'bg-teal-500/10 text-teal-400 border-teal-500/30',
     description: 'ULPIN Bhu-Aadhaar plot tagging, boundary verification, drone survey & proposal filing.'
   },
   {
-    id: 'FINANCE_OFFICER',
-    title: 'Finance / DBT Disbursal Officer',
-    department: 'Public Financial Management System (PFMS)',
-    user: 'Rakesh Verma (Finance Officer)',
-    icon: CreditCard,
-    badge: 'PAYMENT & DBT',
-    badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-    description: 'LARR 2013 solatium calculation, bank account verification & Direct Benefit Transfer.'
-  },
-  {
-    id: 'LEGAL_OFFICER',
-    title: 'Legal Nodal Officer',
-    department: 'State Legal Nodal Cell',
-    user: 'Adv. Suresh K. Nair (Legal Officer)',
-    icon: Scale,
-    badge: 'LEGAL & DISPUTES',
-    badgeColor: 'bg-red-500/10 text-red-400 border-red-500/30',
-    description: 'Section 3C objections, High Court stay order tracking & dispute resolution hearings.'
-  },
-  {
-    id: 'PROJECT_OFFICER',
-    title: 'Project / Corridor Officer',
-    department: 'National Highways Authority of India (NHAI)',
-    user: 'Er. Meenakshi Sundaram (Project Officer)',
-    icon: Compass,
-    badge: 'PROJECT EXECUTION',
+    id: 'MUNICIPAL_OFFICER',
+    title: 'Municipal Officer (ULB Nodal)',
+    department: 'Urban Local Body / Municipal Corporation',
+    user: 'Sanjay Deshmukh (Municipal Officer)',
+    icon: Building,
+    badge: 'URBAN & MUNICIPAL',
     badgeColor: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
-    description: 'Corridor acquisition proposals, land handover taking & project asset utilization.'
+    description: 'Urban masterplan zoning, municipal land parcel verification & building NOC approvals.'
   },
   {
     id: 'CITIZEN',
@@ -123,7 +83,7 @@ export default function LoginModal({ isOpen, onClose, onSelectRole, currentRole 
             </div>
             <div>
               <h3 className="text-base font-black text-white font-mono tracking-tight">
-                BHU-SETU NATIONAL AUTHENTICATION & ROLE GATEWAY
+                BHOOMI-SETU NATIONAL AUTHENTICATION & ROLE GATEWAY
               </h3>
               <p className="text-xs text-slate-400">Select a Role Persona to access customized RBAC views & statutory workflows</p>
             </div>

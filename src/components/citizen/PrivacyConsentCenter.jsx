@@ -57,7 +57,7 @@ export default function PrivacyConsentCenter({ parcel, lang = 'en' }) {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `BhuSetu_PersonalData_${parcel.ulpin}.json`);
+    downloadAnchor.setAttribute("download", `BhoomiSetu_PersonalData_${parcel.ulpin}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();

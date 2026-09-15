@@ -24,7 +24,7 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: `Namaste! I am your Bhu-Sathi AI Decision Support Assistant for BHUSETU.\n\nI am currently synced with parcel Plot ${activeParcel.plotNumber || activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}) in ${activeParcel.village || 'Thane'}.\n\nHow can I assist you with parcel status, field demarcation, risk scores, alternative routes, or active disputes today?`
+      text: `Namaste${activeParcel.ownerName ? ' ' + activeParcel.ownerName : ''}! I am your Bhu-Sathi AI Decision Support Assistant for BHUSETU.\n\nI am currently synced with parcel Plot ${activeParcel.plotNumber || activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}) in ${activeParcel.village || 'Thane'}.\n\nHow can I assist you with parcel status, field demarcation, compensation awards, risk scores, alternative routes, or active disputes today?`
     }
   ]);
 

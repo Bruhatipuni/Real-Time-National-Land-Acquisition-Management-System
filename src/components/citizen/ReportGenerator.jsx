@@ -48,7 +48,7 @@ export default function ReportGenerator({ parcel, lang = 'en' }) {
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(16);
       doc.setFont('helvetica', 'bold');
-      doc.text("BHUSETU - NATIONAL LAND ACQUISITION SYSTEM", 105, 12, { align: 'center' });
+      doc.text("BHOOMISETU - NATIONAL LAND ACQUISITION SYSTEM", 105, 12, { align: 'center' });
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
@@ -260,9 +260,9 @@ export default function ReportGenerator({ parcel, lang = 'en' }) {
       doc.text("GOVERNMENT OF INDIA - DIGITAL RECORD INTEGRITY", 20, 252);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(71, 85, 105);
-      doc.text("This document is generated automatically from the BhuSetu National Land Records Ledger.", 20, 258);
+      doc.text("This document is generated automatically from the BhoomiSetu National Land Records Ledger.", 20, 258);
       doc.text("Any alteration or tampering is punishable under the Information Technology Act 2000.", 20, 263);
-      doc.text("QR Verification Code: [BHUSETU-VERIFY-06-12-8891-K9X2A4]", 20, 269);
+      doc.text("QR Verification Code: [BHOOMISETU-VERIFY-06-12-8891-K9X2A4]", 20, 269);
 
       doc.setFont('helvetica', 'bold');
       doc.text("Competent Authority (CALA)", 150, 269);
@@ -270,10 +270,10 @@ export default function ReportGenerator({ parcel, lang = 'en' }) {
       // Footer
       doc.setFontSize(7.5);
       doc.setTextColor(148, 163, 184);
-      doc.text("Page 1 of 1 • BhuSetu Land Acquisition Management System • Confidential Citizen Record", 105, 290, { align: 'center' });
+      doc.text("Page 1 of 1 • BhoomiSetu Land Acquisition Management System • Confidential Citizen Record", 105, 290, { align: 'center' });
 
       // Save PDF
-      doc.save(`BhuSetu_LandReport_${parcel.ulpin}.pdf`);
+      doc.save(`BhoomiSetu_LandReport_${parcel.ulpin}.pdf`);
       setIsGenerating(false);
       setGeneratedSuccess(true);
       setTimeout(() => setGeneratedSuccess(false), 4000);
@@ -321,8 +321,8 @@ export default function ReportGenerator({ parcel, lang = 'en' }) {
             <p className="font-bold text-sm">{isHi ? "भूमि रिपोर्ट सफलतापूर्वक डाउनलोड की गई!" : "Landowner Report Downloaded Successfully!"}</p>
             <p className="text-emerald-800">
               {isHi 
-                ? `फ़ाइल BhuSetu_LandReport_${parcel.ulpin}.pdf आपके डिवाइस पर सुरक्षित कर ली गई है।`
-                : `File BhuSetu_LandReport_${parcel.ulpin}.pdf has been saved to your downloads with digital verification seal.`}
+                ? `फ़ाइल BhoomiSetu_LandReport_${parcel.ulpin}.pdf आपके डिवाइस पर सुरक्षित कर ली गई है।`
+                : `File BhoomiSetu_LandReport_${parcel.ulpin}.pdf has been saved to your downloads with digital verification seal.`}
             </p>
           </div>
         </div>
@@ -334,12 +334,12 @@ export default function ReportGenerator({ parcel, lang = 'en' }) {
         {/* Header Preview */}
         <div className="border-b-2 border-slate-900 pb-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center font-black font-mono text-lg shadow-sm">
-              BHU
+            <div className="w-12 h-12 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center font-black font-mono text-[10px] text-center shadow-sm leading-tight p-1">
+              BHOOMI SETU
             </div>
             <div>
               <h3 className="text-base font-black text-slate-900 font-mono tracking-tight">
-                BHUSETU — NATIONAL LAND ACQUISITION DOSSIER
+                BHOOMISETU — NATIONAL LAND ACQUISITION DOSSIER
               </h3>
               <p className="text-[10px] font-mono text-amber-800 font-bold uppercase">
                 Digital India Land Records Modernization Programme (DILRMP)
@@ -426,7 +426,7 @@ export default function ReportGenerator({ parcel, lang = 'en' }) {
               <p className="text-[11px] text-slate-500 leading-snug">
                 {isHi 
                   ? "इस क्यूआर कोड को किसी भी स्मार्टफ़ोन से स्कैन कर सीधे राष्ट्रीय भू-अभिलेख पोर्टल पर प्रामाणिकता जांची जा सकती है।"
-                  : "Scan with any government mobile app or browser to instantly verify the cryptographic signature on BhuSetu."}
+                  : "Scan with any government mobile app or browser to instantly verify the cryptographic signature on BhoomiSetu."}
               </p>
             </div>
           </div>

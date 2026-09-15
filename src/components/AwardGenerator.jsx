@@ -18,7 +18,7 @@ export default function AwardGenerator({ parcels, projects }) {
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
-    doc.text("BHUSETU - NATIONAL LAND PLATFORM", 105, 18, { align: "center" });
+    doc.text("BHOOMISETU - NATIONAL LAND PLATFORM", 105, 18, { align: "center" });
     doc.setFontSize(11);
     doc.text('"Your Land, Our Responsibility"', 105, 25, { align: "center" });
     

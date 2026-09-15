@@ -266,7 +266,7 @@ export default function App() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-white font-mono font-black text-sm tracking-wide">BHUSETU</span>
+                <span className="text-white font-mono font-black text-sm tracking-wide">BHOOMI<span className="text-amber-500">SETU</span></span>
                 <span className="text-slate-600">|</span>
                 <span className="text-amber-400 font-medium text-xs">National Land Acquisition & Management Platform</span>
               </div>
