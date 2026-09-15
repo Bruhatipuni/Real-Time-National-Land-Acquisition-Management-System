@@ -306,10 +306,10 @@ export default function ProjectDetailsView({
       </div>
 
       {/* 2. Project Details Header Banner */}
-      <div className="gov-card rounded-2xl p-5 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-xl relative overflow-hidden border border-slate-700">
-        <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute top-0 right-0 p-4 opacity-15 pointer-events-none">
-          <Route className="w-32 h-32 text-white" />
+      <div className="gov-card rounded-2xl p-5 bg-gradient-to-r from-amber-50/40 via-white to-slate-50/60 border border-slate-200/90 shadow-sm relative overflow-hidden">
+        <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+          <Route className="w-32 h-32 text-slate-800" />
         </div>
 
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
@@ -319,32 +319,32 @@ export default function ProjectDetailsView({
                 {project.id}
               </span>
               <span className={`text-[10px] font-mono font-black px-2.5 py-0.5 rounded border uppercase ${
-                project.status === 'NEAR_COMPLETION' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' :
-                project.status === 'CRITICAL_BOTTLENECK' || project.status === 'DELAYED' ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' :
-                'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                project.status === 'NEAR_COMPLETION' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
+                project.status === 'CRITICAL_BOTTLENECK' || project.status === 'DELAYED' ? 'bg-rose-100 text-rose-800 border-rose-300' :
+                'bg-amber-100 text-amber-900 border-amber-300'
               }`}>
                 {project.status.replace('_', ' ')}
               </span>
-              <span className="text-slate-400 text-xs font-mono">
+              <span className="text-slate-500 text-xs font-mono font-medium">
                 {project.agency} • {project.ministry}
               </span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-950">
               {project.name}
             </h1>
-            <p className="text-xs text-slate-300 font-medium leading-relaxed">
+            <p className="text-xs text-slate-600 font-medium leading-relaxed">
               {project.corridorName || 'Access-controlled national logistics corridor under PM Gati Shakti National Master Plan.'}
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs pt-1 text-slate-300 font-mono">
+            <div className="flex flex-wrap items-center gap-4 text-xs pt-1 text-slate-700 font-mono">
               <div className="flex items-center space-x-1.5">
-                <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                <span><strong>States:</strong> {(project.states || [project.state]).join(', ')}</span>
+                <MapPin className="w-3.5 h-3.5 text-amber-600" />
+                <span><strong className="text-slate-900">States:</strong> {(project.states || [project.state]).join(', ')}</span>
               </div>
               <div className="flex items-center space-x-1.5">
-                <Compass className="w-3.5 h-3.5 text-blue-400" />
-                <span><strong>Districts:</strong> {project.districts.join(' → ')}</span>
+                <Compass className="w-3.5 h-3.5 text-blue-600" />
+                <span><strong className="text-slate-900">Districts:</strong> {project.districts.join(' → ')}</span>
               </div>
             </div>
           </div>
@@ -352,11 +352,11 @@ export default function ProjectDetailsView({
           {/* Key Status Pill Badges */}
           <div className="flex flex-wrap lg:flex-col items-end gap-2.5 shrink-0">
             {/* Risk Score Pill */}
-            <div className="bg-slate-800/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 text-right">
-              <div className="text-[10px] uppercase font-mono text-slate-400 font-bold">Acquisition Risk</div>
+            <div className="bg-slate-100/90 border border-slate-200 px-3.5 py-2 rounded-xl text-right shadow-2xs">
+              <div className="text-[10px] uppercase font-mono text-slate-500 font-bold">Acquisition Risk</div>
               <div className="flex items-center justify-end space-x-1.5 mt-0.5">
-                <span className="text-xl font-black font-mono text-white">{riskAnalysis.score}</span>
-                <span className="text-xs text-slate-400">/100</span>
+                <span className="text-xl font-black font-mono text-slate-950">{riskAnalysis.score}</span>
+                <span className="text-xs text-slate-500">/100</span>
                 <span className={`text-[9px] font-mono font-black px-2 py-0.5 rounded border ${riskAnalysis.tierColor}`}>
                   {riskAnalysis.tier}
                 </span>
@@ -365,16 +365,16 @@ export default function ProjectDetailsView({
 
             {/* Current Stage & Delay */}
             <div className="flex items-center space-x-2">
-              <div className="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700 text-xs">
-                <span className="text-[10px] text-slate-400 block font-mono">Current Stage</span>
-                <strong className="text-amber-400 font-mono text-xs">{project.currentStage}</strong>
+              <div className="bg-slate-100/90 px-3 py-1.5 rounded-xl border border-slate-200 text-xs shadow-2xs">
+                <span className="text-[10px] text-slate-500 block font-mono font-medium">Current Stage</span>
+                <strong className="text-amber-800 font-mono text-xs">{project.currentStage}</strong>
               </div>
-              <div className="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700 text-xs">
-                <span className="text-[10px] text-slate-400 block font-mono">SLA Timeline</span>
+              <div className="bg-slate-100/90 px-3 py-1.5 rounded-xl border border-slate-200 text-xs shadow-2xs">
+                <span className="text-[10px] text-slate-500 block font-mono font-medium">SLA Timeline</span>
                 {project.delayDays > 0 ? (
-                  <strong className="text-rose-400 font-mono text-xs">+{project.delayDays}d Overdue</strong>
+                  <strong className="text-rose-700 font-mono text-xs">+{project.delayDays}d Overdue</strong>
                 ) : (
-                  <strong className="text-emerald-400 font-mono text-xs">On Schedule</strong>
+                  <strong className="text-emerald-700 font-mono text-xs">On Schedule</strong>
                 )}
               </div>
             </div>
