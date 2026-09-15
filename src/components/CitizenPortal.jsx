@@ -22,7 +22,8 @@ import {
   Download,
   Building2,
   ShieldCheck,
-  LayoutDashboard
+  LayoutDashboard,
+  Scroll
 } from 'lucide-react';
 
 // Subcomponents
@@ -31,6 +32,7 @@ import MyLandGISMap from './citizen/MyLandGISMap';
 import AcquisitionTimeline from './citizen/AcquisitionTimeline';
 import CompensationBreakdown from './citizen/CompensationBreakdown';
 import DocumentVaultUpload from './citizen/DocumentVaultUpload';
+import ApplyLandPapers from './citizen/ApplyLandPapers';
 import LegalObjectionCases from './citizen/LegalObjectionCases';
 import GrievanceTracker from './citizen/GrievanceTracker';
 import ImportantDeadlines from './citizen/ImportantDeadlines';
@@ -136,6 +138,7 @@ export default function CitizenPortal({ parcels, selectedParcel, setSelectedParc
     { id: 'timeline', label: t.tabTimeline, icon: Clock },
     { id: 'compensation', label: t.tabCompensation, icon: IndianRupee },
     { id: 'documents', label: t.tabDocuments, icon: FolderArchive },
+    { id: 'applyPapers', label: t.tabApplyPapers, icon: Scroll },
     { id: 'legal', label: t.tabLegal, icon: Scale },
     { id: 'grievances', label: t.tabGrievances, icon: MessageSquare },
     { id: 'deadlines', label: t.tabDeadlines, icon: Calendar },
@@ -454,6 +457,13 @@ export default function CitizenPortal({ parcels, selectedParcel, setSelectedParc
 
         {activeTab === 'documents' && (
           <DocumentVaultUpload 
+            parcel={activeParcel} 
+            lang={lang} 
+          />
+        )}
+
+        {activeTab === 'applyPapers' && (
+          <ApplyLandPapers 
             parcel={activeParcel} 
             lang={lang} 
           />
