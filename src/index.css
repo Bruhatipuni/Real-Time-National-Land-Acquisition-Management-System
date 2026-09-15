@@ -32,6 +32,17 @@
   height: 100%;
   background-color: #e2e8f0 !important;
   border-radius: 0.75rem;
+  z-index: 0 !important;
+  position: relative !important;
+}
+
+.leaflet-pane {
+  z-index: 5 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 10 !important;
 }
 
 .leaflet-popup-content-wrapper {

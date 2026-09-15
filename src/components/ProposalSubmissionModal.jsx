@@ -69,7 +69,7 @@ export default function ProposalSubmissionModal({ isOpen, onClose, onAddProposal
   };
 
   return (
-    <div className="fixed inset-0 z-[3000] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
       <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">

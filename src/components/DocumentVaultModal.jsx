@@ -31,7 +31,7 @@ export default function DocumentVaultModal({ isOpen, onClose, parcels }) {
   });
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
         {/* Header */}
         <div className="bg-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-slate-800">

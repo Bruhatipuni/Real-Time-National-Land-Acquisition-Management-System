@@ -163,9 +163,9 @@ export default function GISMapView({ projects, parcels, selectedParcel, setSelec
       {/* Map + Drawer Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-[650px]">
         {/* Left Map View (7 cols) */}
-        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl overflow-hidden relative shadow-md">
+        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl overflow-hidden relative z-0 isolate shadow-md">
           {/* Map Layer Controls (Top Right) */}
-          <div className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur border border-slate-200 rounded-xl p-2.5 text-xs space-y-2 shadow-lg">
+          <div className="absolute top-3 right-3 z-20 bg-white/95 backdrop-blur border border-slate-200 rounded-xl p-2.5 text-xs space-y-2 shadow-lg">
             <div>
               <div className="font-extrabold text-[10px] uppercase text-slate-600 tracking-wider flex items-center space-x-1">
                 <Layers className="w-3.5 h-3.5 text-amber-600" />

@@ -6,7 +6,7 @@ export default function AuditLogModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[2500] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4">
       <div className="bg-white border border-slate-300 rounded-2xl max-w-2xl w-full p-5 space-y-4 shadow-2xl relative text-slate-900">
         <div className="flex items-center justify-between border-b border-slate-200 pb-3">
           <div className="flex items-center space-x-2">
