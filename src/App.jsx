@@ -190,7 +190,14 @@ export default function App() {
         )}
 
         {activeTab === 'surveyor' && (
-          <SurveyorWorkbench onAdvanceStage={handleAdvanceStage} />
+          <SurveyorWorkbench 
+            parcels={parcels}
+            setParcels={setParcels}
+            projects={projects}
+            selectedParcel={selectedParcel}
+            setSelectedParcel={setSelectedParcel}
+            onAdvanceStage={handleAdvanceStage} 
+          />
         )}
       </main>
 

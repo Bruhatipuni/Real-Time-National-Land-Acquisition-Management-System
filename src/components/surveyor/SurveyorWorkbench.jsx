@@ -37,12 +37,85 @@ import FieldSurveyMode from './FieldSurveyMode';
 import SurveyRouteModal from './SurveyRouteModal';
 import SurveyReportModal from './SurveyReportModal';
 
-export default function SurveyorWorkbench({ onAdvanceStage }) {
-  const [parcels, setParcels] = useState(ASSIGNED_PARCELS_DATA);
-  const [selectedParcel, setSelectedParcel] = useState(ASSIGNED_PARCELS_DATA[0]);
+export default function SurveyorWorkbench({ 
+  parcels: propParcels, 
+  setParcels: propSetParcels, 
+  projects = [], 
+  selectedParcel: propSelectedParcel, 
+  setSelectedParcel: propSetSelectedParcel, 
+  onAdvanceStage 
+}) {
+  const [selectedProjectId, setSelectedProjectId] = useState('ALL');
   const [activeFilter, setActiveFilter] = useState('ALL'); // 'ALL', 'TODAY', 'PENDING', 'IN_PROGRESS', 'COMPLETED', 'RE_SURVEY', 'DISPUTED', 'HIGH_PRIORITY'
   const [searchQuery, setSearchQuery] = useState('');
   
+  // Harmonize propParcels with field survey attributes
+  const masterParcels = React.useMemo(() => {
+    const baseList = (propParcels && propParcels.length > 0) ? propParcels : ASSIGNED_PARCELS_DATA;
+    return baseList.map(p => {
+      const assigned = ASSIGNED_PARCELS_DATA.find(a => a.id === p.id) || {};
+      return {
+        ...assigned,
+        ...p,
+        surveyNumber: p.surveyNumber || p.surveyNo || assigned.surveyNumber || '142/3',
+        ownerName: p.ownerName || p.currentOwner || assigned.ownerName || 'Landowner',
+        recordedAreaHa: p.recordedAreaHa || p.areaHectares || p.area || assigned.recordedAreaHa || 2.5,
+        surveyedAreaHa: p.surveyedAreaHa || assigned.surveyedAreaHa || p.areaHectares || 2.5,
+        cadastralPolygon: p.cadastralPolygon || p.coordinates || assigned.cadastralPolygon || [],
+        surveyPolygon: p.surveyPolygon || assigned.surveyPolygon || p.coordinates || [],
+        mapCenter: p.center || assigned.mapCenter || (p.coordinates ? p.coordinates[0] : [28.1515, 76.9277]),
+        capturedPoints: p.capturedPoints || assigned.capturedPoints || [],
+        ownerVerification: p.ownerVerification || assigned.ownerVerification || { ownerPresent: true, identityVerified: true, hasSignature: false },
+        evidencePhotos: p.evidencePhotos || assigned.evidencePhotos || [],
+        voiceNotes: p.voiceNotes || assigned.voiceNotes || [],
+        auditTrail: p.auditTrail || assigned.auditTrail || []
+      };
+    });
+  }, [propParcels]);
+
+  // Filter by corridor project if selected
+  const projectFilteredParcels = React.useMemo(() => {
+    if (selectedProjectId === 'ALL') return masterParcels;
+    return masterParcels.filter(p => p.projectId === selectedProjectId);
+  }, [masterParcels, selectedProjectId]);
+
+  const [selectedParcel, setSelectedParcel] = useState(
+    propSelectedParcel || projectFilteredParcels[0] || ASSIGNED_PARCELS_DATA[0]
+  );
+
+  // Sync selected parcel if list changes
+  React.useEffect(() => {
+    if (projectFilteredParcels.length > 0) {
+      const stillExists = projectFilteredParcels.find(p => p.id === selectedParcel?.id);
+      if (!stillExists) {
+        setSelectedParcel(projectFilteredParcels[0]);
+      }
+    }
+  }, [projectFilteredParcels]);
+
+  // Dynamic KPI Metrics matching active corridor / national parcels
+  const stats = React.useMemo(() => {
+    const list = projectFilteredParcels;
+    const assignedToday = list.filter(p => p.assignedToday || ['LND-00125', 'LND-00126', 'LND-00127', 'LND-00128', 'LND-00130'].includes(p.id)).length;
+    const completed = list.filter(p => p.surveyStatus === 'COMPLETED' || ['HANDOVER', 'UTILIZATION', 'ACQUIRED'].includes(p.status)).length;
+    const pending = list.filter(p => p.surveyStatus === 'PENDING' || ['IDENTIFIED', 'VERIFICATION'].includes(p.status)).length;
+    const inProgress = list.filter(p => p.surveyStatus === 'IN_PROGRESS' || ['PROPOSAL', 'NOTICE'].includes(p.status)).length;
+    const resurvey = list.filter(p => p.surveyStatus === 'RE_SURVEY').length;
+    const disputes = list.filter(p => p.surveyStatus === 'DISPUTED' || p.status === 'LEGAL' || (p.legalIssues && p.legalIssues.length > 0)).length;
+    const offlineSync = 3;
+    const pct = list.length > 0 ? Math.round((completed / list.length) * 100) : 72;
+    return {
+      assignedToday: assignedToday || list.length,
+      completed,
+      pending,
+      inProgress,
+      resurvey,
+      disputes,
+      offlineSync,
+      progressPercent: pct
+    };
+  }, [projectFilteredParcels]);
+
   // Field survey mode launcher
   const [isSurveyModeActive, setIsSurveyModeActive] = useState(false);
   const [activeSurveyParcel, setActiveSurveyParcel] = useState(null);
@@ -62,7 +135,7 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
   const [inspectorTab, setInspectorTab] = useState('overview'); // 'overview', 'map', 'documents', 'owner', 'timeline', 'audit'
 
   // Filtered parcels logic
-  const filteredParcels = parcels.filter((p) => {
+  const filteredParcels = projectFilteredParcels.filter((p) => {
     const query = searchQuery.toLowerCase();
     const matchesSearch = 
       p.id.toLowerCase().includes(query) ||
@@ -111,15 +184,18 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
 
   // Handle returning from survey mode with updated parcel data
   const handleUpdateParcelFromSurvey = (updatedParcel) => {
-    setParcels(prev => prev.map(p => p.id === updatedParcel.id ? updatedParcel : p));
-    if (selectedParcel.id === updatedParcel.id) {
+    if (propSetParcels) {
+      propSetParcels(prev => prev.map(p => p.id === updatedParcel.id ? { ...p, ...updatedParcel } : p));
+    }
+    if (selectedParcel?.id === updatedParcel.id) {
       setSelectedParcel(updatedParcel);
+      if (propSetSelectedParcel) propSetSelectedParcel(updatedParcel);
     }
   };
 
   // Offline Package Download Simulation
   const handleDownloadPackage = () => {
-    alert("Downloading Offline Survey Cache:\n• High-Res Cadastral Maps (Sohna Rural)\n• RoR Jamabandi Records\n• 32 Parcel Coordinates\n• Offline BHOOMISETU Ledger DB");
+    alert("Downloading Offline Survey Cache:\n• High-Res Cadastral Maps\n• RoR Jamabandi Records\n• Real-Time Parcel Coordinates\n• Offline BHOOMISETU Ledger DB");
     setOfflinePackageReady(true);
   };
 
@@ -260,8 +336,10 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
             className="gov-card rounded-xl p-3 bg-white border border-slate-200 shadow-xs cursor-pointer hover:border-amber-400 transition-all"
           >
             <span className="text-[10px] font-mono uppercase text-slate-500 font-bold block">Assigned Today</span>
-            <span className="text-2xl font-black font-mono text-slate-900 mt-0.5 block">{SURVEYOR_KPIS.assignedToday}</span>
-            <span className="text-[10px] text-slate-500 font-mono">Sohna & Tauru Sector</span>
+            <span className="text-2xl font-black font-mono text-slate-900 mt-0.5 block">{stats.assignedToday}</span>
+            <span className="text-[10px] text-slate-500 font-mono">
+              {selectedProjectId === 'ALL' ? 'All Active Sectors' : 'Corridor Sector'}
+            </span>
           </div>
 
           {/* Completed */}
@@ -270,7 +348,7 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
             className="gov-card rounded-xl p-3 bg-white border border-slate-200 shadow-xs cursor-pointer hover:border-emerald-400 transition-all"
           >
             <span className="text-[10px] font-mono uppercase text-emerald-700 font-bold block">Completed</span>
-            <span className="text-2xl font-black font-mono text-emerald-700 mt-0.5 block">{SURVEYOR_KPIS.completedToday}</span>
+            <span className="text-2xl font-black font-mono text-emerald-700 mt-0.5 block">{stats.completed}</span>
             <span className="text-[10px] text-slate-500 font-mono">DGPS Verified</span>
           </div>
 
@@ -280,7 +358,7 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
             className="gov-card rounded-xl p-3 bg-white border border-slate-200 shadow-xs cursor-pointer hover:border-amber-400 transition-all"
           >
             <span className="text-[10px] font-mono uppercase text-amber-700 font-bold block">Pending</span>
-            <span className="text-2xl font-black font-mono text-amber-700 mt-0.5 block">{SURVEYOR_KPIS.pendingSurveys}</span>
+            <span className="text-2xl font-black font-mono text-amber-700 mt-0.5 block">{stats.pending}</span>
             <span className="text-[10px] text-slate-500 font-mono">Awaiting Inspection</span>
           </div>
 
@@ -290,7 +368,7 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
             className="gov-card rounded-xl p-3 bg-white border border-slate-200 shadow-xs cursor-pointer hover:border-rose-400 transition-all"
           >
             <span className="text-[10px] font-mono uppercase text-rose-700 font-bold block">Re-Survey Req.</span>
-            <span className="text-2xl font-black font-mono text-rose-700 mt-0.5 block">{SURVEYOR_KPIS.resurveyRequired}</span>
+            <span className="text-2xl font-black font-mono text-rose-700 mt-0.5 block">{stats.resurvey}</span>
             <span className="text-[10px] text-slate-500 font-mono">Supervisor Returned</span>
           </div>
 
@@ -300,7 +378,7 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
             className="gov-card rounded-xl p-3 bg-white border border-slate-200 shadow-xs cursor-pointer hover:border-purple-400 transition-all"
           >
             <span className="text-[10px] font-mono uppercase text-purple-700 font-bold block">Boundary Disputes</span>
-            <span className="text-2xl font-black font-mono text-purple-700 mt-0.5 block">{SURVEYOR_KPIS.boundaryDisputes}</span>
+            <span className="text-2xl font-black font-mono text-purple-700 mt-0.5 block">{stats.disputes}</span>
             <span className="text-[10px] text-slate-500 font-mono">Section 3C Objections</span>
           </div>
 
@@ -310,7 +388,7 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
             className="gov-card rounded-xl p-3 bg-white border border-slate-200 shadow-xs cursor-pointer hover:border-blue-400 transition-all"
           >
             <span className="text-[10px] font-mono uppercase text-blue-700 font-bold block">Offline Sync</span>
-            <span className="text-2xl font-black font-mono text-blue-700 mt-0.5 block">{SURVEYOR_KPIS.offlineSyncPending}</span>
+            <span className="text-2xl font-black font-mono text-blue-700 mt-0.5 block">{stats.offlineSync}</span>
             <span className="text-[10px] text-slate-500 font-mono">Pending Upload</span>
           </div>
         </div>
@@ -321,14 +399,14 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
             <Clock className="w-4 h-4 text-amber-600 shrink-0" />
             <span className="font-bold text-slate-900">Today's Field Target Progress:</span>
             <span className="text-slate-600 font-mono font-medium">
-              <strong>{SURVEYOR_KPIS.completedToday}</strong> of <strong>{SURVEYOR_KPIS.assignedToday}</strong> parcels surveyed ({SURVEYOR_KPIS.todayProgressPercent}%)
+              <strong>{stats.completed}</strong> of <strong>{stats.assignedToday}</strong> parcels surveyed ({stats.progressPercent}%)
             </span>
           </div>
 
           <div className="w-full sm:w-64 bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200">
             <div 
               className="bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full transition-all"
-              style={{ width: `${SURVEYOR_KPIS.todayProgressPercent}%` }}
+              style={{ width: `${stats.progressPercent}%` }}
             />
           </div>
         </div>
@@ -374,6 +452,22 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
             
             {/* Search & Filter Header */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+              {/* Corridor / Project Selector matching Admin view */}
+              <div className="shrink-0">
+                <select
+                  value={selectedProjectId}
+                  onChange={(e) => setSelectedProjectId(e.target.value)}
+                  className="w-full sm:w-auto bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500 cursor-pointer shadow-2xs"
+                >
+                  <option value="ALL">All National Corridors ({masterParcels.length})</option>
+                  {projects.map(proj => (
+                    <option key={proj.id} value={proj.id}>
+                      {proj.name} ({proj.state})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Search */}
               <div className="relative flex-1">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
@@ -388,7 +482,7 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
 
               {/* Counter Badge */}
               <span className="text-xs font-mono font-bold text-slate-500 shrink-0 self-center">
-                Showing <strong>{filteredParcels.length}</strong> of {parcels.length} Parcels
+                Showing <strong>{filteredParcels.length}</strong> of {projectFilteredParcels.length} Parcels
               </span>
             </div>
 
@@ -602,12 +696,36 @@ export default function SurveyorWorkbench({ onAdvanceStage }) {
                     <strong className="text-slate-900">{selectedParcel.landType}</strong>
                   </div>
                   <div className="flex justify-between py-1">
+                    <span className="text-slate-500">Corridor Project:</span>
+                    <strong className="text-slate-900 text-right font-medium truncate max-w-[180px]">{selectedParcel.project || selectedParcel.projectName}</strong>
+                  </div>
+                  <div className="flex justify-between py-1">
+                    <span className="text-slate-500">Statutory Stage:</span>
+                    <span className="text-amber-800 font-mono font-bold uppercase">{selectedParcel.status}</span>
+                  </div>
+                  <div className="flex justify-between py-1">
+                    <span className="text-slate-500">Compensation Award:</span>
+                    <strong className="text-emerald-800 font-mono font-bold">
+                      ₹{(selectedParcel.totalAwardAmount || 26223750).toLocaleString('en-IN')}
+                    </strong>
+                  </div>
+                  <div className="flex justify-between py-1">
                     <span className="text-slate-500">Boundary Status:</span>
                     <span className="text-emerald-700 font-bold">
                       {selectedParcel.surveyStatus === 'COMPLETED' ? '✓ Verified & Mapped' : 'Under Field Survey'}
                     </span>
                   </div>
                 </div>
+
+                {onAdvanceStage && (
+                  <button
+                    onClick={() => onAdvanceStage(selectedParcel.id)}
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center space-x-1.5 transition-colors cursor-pointer shadow-xs"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Advance Pipeline Stage ({selectedParcel.status})</span>
+                  </button>
+                )}
 
                 <button
                   onClick={() => setIsReportModalOpen(true)}

@@ -53,31 +53,32 @@ export default function BhuSathiChatbot({ parcels, selectedParcel, currentUser, 
       // Surveyor-specific queries
       if (isSurveyorMode && (query.includes('boundary') || query.includes('mismatch') || query.includes('deviation') || query.includes('encroach') || query.includes('tolerance'))) {
         botReply = `🛰️ Boundary & Area Mismatch Intelligence (Statutory Tolerance: ±1.5%):\n\n` +
-          `• LND-00125 (Kherki Daula): Measured 2.48 Ha vs 2.43 Ha (+2.06% deviation) - Exceeds 1.5% threshold. Collector review required.\n` +
-          `• LND-00126 (Manesar): Measured 1.76 Ha vs 1.82 Ha (-3.29% deviation) - Encroachment along Western Canal boundary (Points P3-P4).\n` +
-          `• LND-00128 (Badshahpur): Measured 1.85 Ha vs 1.80 Ha (+2.78% deviation) - Dense tree foliage caused GNSS multipath error; re-survey scheduled.\n` +
-          `• LND-00127 & LND-00130: Within statutory tolerance (0.00% and -0.76%). Verification passed!`;
+          `• LND-00125 (Plot 142/3, Sohna Rural • Rameshwar Singh Yadav): Measured 4.47 Ha vs 4.50 Ha (-0.67% deviation) - Within statutory tolerance.\n` +
+          `• LND-00126 (Plot 142/4, Sohna Rural • Sunita Devi & Harish Yadav): Measured 3.10 Ha vs 3.20 Ha (-3.12% deviation) - Western Canal boundary encroachment (Points P3-P4 overlap).\n` +
+          `• LND-00127 (Plot 112/1, Taurupath • Gurdeep Singh Sandhu): Measured 3.10 Ha vs 3.10 Ha (0.00% deviation) - Physical boundary verified; title under High Court Case CASE-102 stay.\n` +
+          `• LND-00128 (Plot 88/C, Taurupath • Devendra Prakash Sharma): Measured 1.23 Ha vs 1.20 Ha (+2.50% deviation) - Northern orchard multipath GNSS interference; re-survey scheduled.\n` +
+          `• LND-00129 & LND-00130: Fully aligned with revenue Khatauni records (0.00% to -0.48%).`;
       }
       else if (isSurveyorMode && (query.includes('5 km') || query.includes('route') || query.includes('nearby') || query.includes('pending survey') || query.includes('plan'))) {
-        botReply = `📍 Optimized Field Survey Route Plan:\n\n` +
-          `• Hub: District Collectorate Field Camp (28.4595° N, 77.0266° E)\n` +
-          `• Total Parcels: 6 Parcels queued along Dwarka Expressway & CPR\n` +
-          `• Waypoint Sequence: Field Camp → LND-00125 (Kherki Daula) → LND-00126 (Manesar) → LND-00127 → LND-00128 → LND-00130 → Return to Camp\n` +
-          `• Total Route Distance: 38.4 km | Est. Travel & Survey Time: 5 hrs 20 mins\n\n` +
-          `Click the "Field Route (6 Parcels)" button on the Surveyor Workbench header to open the interactive map and export GPX waypoints.`;
+        botReply = `📍 Optimized Field Survey Route Plan (Delhi-Mumbai Expressway Spur):\n\n` +
+          `• Hub: Tehsildar & Survey Field Office, Sohna (28.1500° N, 76.9200° E)\n` +
+          `• Active Section: Sohna Rural & Taurupath corridor (KM 38.2 to 44.8)\n` +
+          `• Waypoint Sequence: Sohna Field Office → LND-00125 (Plot 142/3, Rameshwar Singh) → LND-00126 (Plot 142/4, Sunita Devi) → LND-00130 (Plot 12/4, Rakesh Bishnoi) → LND-00127 (Plot 112/1, Gurdeep Sandhu) → LND-00128 (Plot 88/C, Devendra Sharma) → LND-00129 (Plot 90/A, Mahesh Saini) → Return to Sohna Base\n` +
+          `• Total Route Distance: 28.6 km | Est. Travel & Survey Time: 4 hrs 45 mins\n\n` +
+          `Click "Optimize Field Route" on the Surveyor Workbench header to open the interactive map and export GPX waypoints.`;
       }
       else if (isSurveyorMode && (query.includes('report') || query.includes('form vii') || query.includes('generate') || query.includes('certificate'))) {
         botReply = `📄 Form VII-A Statutory Land Survey & Demarcation Certificate:\n\n` +
           `• Format: Prescribed Government of India statutory field survey certificate.\n` +
           `• Includes: 14-digit ULPIN Bhu-Aadhaar, WGS-84 UTM Zone 43N coordinates table, RTK fix accuracies (±1.8m), variance computation, geo-tagged watermarked evidence photos, and owner Aadhaar verification.\n` +
           `• Signature: Surveyor Digital Signature + CALA Land Officer Counter-signature with QR verification code.\n\n` +
-          `Click "Official Survey Report (Form VII-A)" or the "Report" button on any parcel row to view and print the statutory PDF.`;
+          `Click "Preview Official Survey Report" on any parcel in the workbench to view and print the statutory PDF.`;
       }
       else if (isSurveyorMode && (query.includes('deadline') || query.includes('week') || query.includes('urgent') || query.includes('today'))) {
         botReply = `⏰ High Priority Survey Deadlines:\n\n` +
-          `1. LND-00125 (Plot 402/1, Kherki Daula): DEADLINE TODAY 17:00 IST (Interchange Corridor - Critical Path)\n` +
-          `2. LND-00126 (Plot 188/3, Manesar): DEADLINE 16 SEP 2026 12:00 IST (Encroachment verification)\n` +
-          `3. LND-00128 (Plot 512, Badshahpur): DEADLINE 18 SEP 2026 18:00 IST (Re-survey with total station)\n\n` +
+          `1. LND-00125 (Plot 142/3, Sohna Rural • Rameshwar Singh Yadav): DEADLINE TODAY 17:00 IST (Critical Path Interchange Corridor)\n` +
+          `2. LND-00126 (Plot 142/4, Sohna Rural • Sunita Devi & Harish Yadav): DEADLINE 16 SEP 2026 12:00 IST (Encroachment Demarcation)\n` +
+          `3. LND-00128 (Plot 88/C, Taurupath • Devendra Prakash Sharma): DEADLINE 18 SEP 2026 18:00 IST (Total Station Re-Survey)\n\n` +
           `Recommended: Open "My Assigned Parcels", filter by "High Priority" or "Today", and tap "START SURVEY".`;
       }
       // Citizen & general queries
