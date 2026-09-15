@@ -46,6 +46,7 @@ import { NEARBY_GIS_FEATURES } from '../../data/surveyorData';
 
 // Custom Leaflet Markers
 const createSurveyPointIcon = (label, color = '#d97706') => {
+  if (typeof window === 'undefined' || !L || !L.divIcon) return null;
   return L.divIcon({
     className: 'custom-survey-marker',
     html: `
@@ -58,17 +59,20 @@ const createSurveyPointIcon = (label, color = '#d97706') => {
   });
 };
 
-const surveyorLocationIcon = L.divIcon({
-  className: 'custom-surveyor-beacon',
-  html: `
-    <div style="position: relative; width: 20px; height: 20px;">
-      <div style="position: absolute; inset: 0; border-radius: 50%; background-color: #3b82f6; opacity: 0.4; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-      <div style="position: absolute; inset: 3px; border-radius: 50%; background-color: #1d4ed8; border: 2px solid #ffffff; box-shadow: 0 0 10px #3b82f6;"></div>
-    </div>
-  `,
-  iconSize: [20, 20],
-  iconAnchor: [10, 10]
-});
+const getSurveyorLocationIcon = () => {
+  if (typeof window === 'undefined' || !L || !L.divIcon) return null;
+  return L.divIcon({
+    className: 'custom-surveyor-beacon',
+    html: `
+      <div style="position: relative; width: 20px; height: 20px;">
+        <div style="position: absolute; inset: 0; border-radius: 50%; background-color: #3b82f6; opacity: 0.4; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+        <div style="position: absolute; inset: 3px; border-radius: 50%; background-color: #1d4ed8; border: 2px solid #ffffff; box-shadow: 0 0 10px #3b82f6;"></div>
+      </div>
+    `,
+    iconSize: [20, 20],
+    iconAnchor: [10, 10]
+  });
+};
 
 function MapController({ center, zoom }) {
   const map = useMap();
