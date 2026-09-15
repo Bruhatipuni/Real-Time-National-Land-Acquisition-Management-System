@@ -17,12 +17,7 @@ export const STAGES_LIST = [
 
 export const ROLES_LIST = [
   { id: 'SUPER_ADMIN', name: 'Super Admin / Ministry Joint Secretary', level: 'National', scope: 'Full Access across all 11 stages & settings' },
-  { id: 'STATE_ADMIN', name: 'State Land Secretary (State Admin)', level: 'State', scope: 'Statewide approval, land records & statutory notices' },
-  { id: 'DISTRICT_OFFICER', name: 'District Officer / Collector (LAO)', level: 'District', scope: 'Proposal review, district approval & solatium sign-off' },
   { id: 'LAND_OFFICER', name: 'Land Nodal Officer', level: 'District/Tehsil', scope: 'Land identification, verification & proposal submission' },
-  { id: 'FINANCE_OFFICER', name: 'Finance / DBT Disbursal Officer', level: 'Department', scope: 'Valuation, solatium calculation & PFMS bank payment' },
-  { id: 'LEGAL_OFFICER', name: 'Legal Nodal Officer', level: 'State/District', scope: 'Section 3C objections, court stay review & dispute resolution' },
-  { id: 'PROJECT_OFFICER', name: 'Project / Corridor Officer', level: 'Agency', scope: 'Land handover verification & project utilization progress' },
   { id: 'CITIZEN', name: 'Citizen / Landowner Portal', level: 'Public', scope: 'ULPIN lookup, DBT payment status & Section 3C objection filing' }
 ];
 

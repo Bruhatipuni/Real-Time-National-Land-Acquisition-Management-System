@@ -165,8 +165,8 @@ export default function AuthScreen({ onLoginSuccess }) {
                 {/* Quick Persona Logins */}
                 <div className="pt-3 border-t border-slate-800 space-y-2">
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block text-center">Quick One-Click Demo Access</span>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {PRESET_ROLES.filter(r => ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'CITIZEN'].includes(r.id)).map((role) => (
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+                    {PRESET_ROLES.map((role) => (
                       <button
                         type="button"
                         key={role.id}
