@@ -12,13 +12,18 @@ import {
 import { calculateLARRCompensation } from '../src/utils/compensationEngine.js';
 import { getULPINDetails, validateULPINFormat } from '../src/utils/ulpinGenerator.js';
 
+import { connectDB } from './db.js';
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
 
-// In-memory data store for API mutations
+// Attempt DB connection on server launch
+connectDB().catch(err => console.error('[MongoDB Startup] Connection error:', err));
+
+// In-memory data store for API mutations & offline fallback
 let landsStore = [...PARCELS_DATA];
 let legalCasesStore = [...LEGAL_CASES_DATA];
 let auditLogsStore = [...RECENT_AUDIT_LOGS];
