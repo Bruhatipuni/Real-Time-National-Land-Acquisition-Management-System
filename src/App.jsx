@@ -8,6 +8,7 @@ import AwardGenerator from './components/AwardGenerator';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import CentralMinistryCommandCenter from './components/CentralMinistryCommandCenter';
 import SurveyorWorkbench from './components/surveyor/SurveyorWorkbench';
+import MunicipalOfficerPortal from './components/municipal/MunicipalOfficerPortal';
 import BhuSathiChatbot from './components/BhuSathiChatbot';
 import AuditLogModal from './components/AuditLogModal';
 import ProposalSubmissionModal from './components/ProposalSubmissionModal';
@@ -61,6 +62,8 @@ export default function App() {
       setActiveTab('analytics');
     } else if (roleId === 'LAND_OFFICER') {
       setActiveTab('surveyor');
+    } else if (roleId === 'MUNICIPAL_OFFICER') {
+      setActiveTab('municipal');
     } else {
       setActiveTab('gis');
     }
@@ -197,6 +200,18 @@ export default function App() {
             selectedParcel={selectedParcel}
             setSelectedParcel={setSelectedParcel}
             onAdvanceStage={handleAdvanceStage} 
+          />
+        )}
+
+        {activeTab === 'municipal' && (
+          <MunicipalOfficerPortal 
+            parcels={parcels}
+            onSelectParcel={(p) => {
+              setSelectedParcel(p);
+              setActiveTab('gis');
+            }}
+            onNavigateToSurveyor={() => setActiveTab('surveyor')}
+            onNavigateToGIS={() => setActiveTab('gis')}
           />
         )}
       </main>

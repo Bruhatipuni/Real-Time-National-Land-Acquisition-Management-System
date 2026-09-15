@@ -67,21 +67,28 @@ export default function Navbar({
       label: 'Land & GIS Map', 
       icon: Map, 
       badge: 'Live GIS',
-      roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'PROJECT_OFFICER'] 
+      roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'MUNICIPAL_OFFICER', 'PROJECT_OFFICER'] 
     },
     { 
       id: 'surveyor', 
       label: 'Surveyor Workbench', 
       icon: Crosshair, 
       badge: 'DGPS / RTK',
-      roles: ['SUPER_ADMIN', 'LAND_OFFICER', 'STATE_ADMIN', 'DISTRICT_OFFICER'] 
+      roles: ['SUPER_ADMIN', 'LAND_OFFICER', 'MUNICIPAL_OFFICER', 'STATE_ADMIN', 'DISTRICT_OFFICER'] 
+    },
+    { 
+      id: 'municipal', 
+      label: 'Municipal Officer Portal', 
+      icon: Building2, 
+      badge: 'ULB Nodal',
+      roles: ['SUPER_ADMIN', 'MUNICIPAL_OFFICER', 'STATE_ADMIN', 'DISTRICT_OFFICER'] 
     },
     { 
       id: 'workflow', 
       label: 'Statutory 10-Stage Pipeline', 
       icon: GitPullRequest,
       badge: 'RFCTLARR 2013',
-      roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'FINANCE_OFFICER', 'LEGAL_OFFICER', 'PROJECT_OFFICER'],
+      roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'MUNICIPAL_OFFICER', 'FINANCE_OFFICER', 'LEGAL_OFFICER', 'PROJECT_OFFICER'],
       dropdown: [
         { num: '01', name: 'Land Identification & Khata Cadastral' },
         { num: '02', name: 'Field Survey & Verification' },
@@ -124,8 +131,8 @@ export default function Navbar({
     : allNavItems.filter(item => item.roles.includes(roleId));
 
   // Action permissions
-  const canSubmitProposal = ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'PROJECT_OFFICER'].includes(roleId);
-  const canViewLedger = ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'LEGAL_OFFICER'].includes(roleId);
+  const canSubmitProposal = ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'MUNICIPAL_OFFICER', 'PROJECT_OFFICER'].includes(roleId);
+  const canViewLedger = ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'MUNICIPAL_OFFICER', 'LEGAL_OFFICER'].includes(roleId);
 
   return (
     <header className="sticky top-0 z-50 shadow-md font-sans">
