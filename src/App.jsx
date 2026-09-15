@@ -168,7 +168,11 @@ export default function App() {
         )}
 
         {activeTab === 'citizen' && (
-          <CitizenPortal parcels={parcels} />
+          <CitizenPortal 
+            parcels={parcels} 
+            selectedParcel={selectedParcel}
+            setSelectedParcel={setSelectedParcel}
+          />
         )}
 
         {activeTab === 'award' && (
@@ -181,7 +185,10 @@ export default function App() {
       </main>
 
       {/* Bhu-Sathi AI Chatbot Widget */}
-      <BhuSathiChatbot parcels={parcels} />
+      <BhuSathiChatbot 
+        parcels={parcels} 
+        selectedParcel={selectedParcel}
+      />
 
       {/* Modals */}
       <AuditLogModal isOpen={isAuditOpen} onClose={() => setIsAuditOpen(false)} />
