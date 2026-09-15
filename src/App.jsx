@@ -13,6 +13,7 @@ import ProposalSubmissionModal from './components/ProposalSubmissionModal';
 import DocumentVaultModal from './components/DocumentVaultModal';
 import LegalDisputesModal from './components/LegalDisputesModal';
 import NotificationsModal from './components/NotificationsModal';
+import MunicipalOfficerDashboard from './components/MunicipalOfficerDashboard';
 import AuthScreen from './components/AuthScreen';
 import { PROJECTS_DATA, PARCELS_DATA } from './data/mockData';
 
@@ -56,6 +57,8 @@ export default function App() {
     const roleId = userObj?.roleObj?.id || 'SUPER_ADMIN';
     if (roleId === 'CITIZEN') {
       setActiveTab('citizen');
+    } else if (roleId === 'MUNICIPAL_OFFICER') {
+      setActiveTab('municipal');
     } else if (roleId === 'SUPER_ADMIN') {
       setActiveTab('analytics');
     } else {
@@ -175,6 +178,12 @@ export default function App() {
             parcels={parcels} 
             selectedParcel={selectedParcel}
             setSelectedParcel={setSelectedParcel}
+          />
+        )}
+
+        {activeTab === 'municipal' && (
+          <MunicipalOfficerDashboard 
+            currentUser={currentUser}
           />
         )}
 

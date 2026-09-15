@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Building2, 
+  Building,
   Map, 
   GitPullRequest, 
   UserCheck, 
@@ -66,7 +67,14 @@ export default function Navbar({
       label: 'Land & GIS Map', 
       icon: Map, 
       badge: 'Live GIS',
-      roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'PROJECT_OFFICER'] 
+      roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'PROJECT_OFFICER', 'MUNICIPAL_OFFICER'] 
+    },
+    { 
+      id: 'municipal', 
+      label: 'Municipal Property Verification', 
+      icon: Building, 
+      badge: 'ULB Nodal',
+      roles: ['SUPER_ADMIN', 'MUNICIPAL_OFFICER'] 
     },
     { 
       id: 'workflow', 
@@ -117,7 +125,7 @@ export default function Navbar({
 
   // Action permissions
   const canSubmitProposal = ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'PROJECT_OFFICER'].includes(roleId);
-  const canViewLedger = ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'LEGAL_OFFICER'].includes(roleId);
+  const canViewLedger = ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'LEGAL_OFFICER', 'MUNICIPAL_OFFICER'].includes(roleId);
 
   return (
     <header className="sticky top-0 z-50 shadow-md font-sans">
