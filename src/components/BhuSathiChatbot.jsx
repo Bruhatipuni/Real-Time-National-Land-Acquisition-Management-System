@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bot, X, Send, Sparkles, User, HelpCircle, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Bot, X, Send, Sparkles, User, HelpCircle, ArrowRight, ShieldCheck, Compass, AlertTriangle } from 'lucide-react';
 import { formatINR } from '../utils/compensationEngine';
 import { getNextActionDetails } from './citizen/citizenData';
 
@@ -7,21 +7,33 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
 
-  const activeParcel = selectedParcel || parcels[0];
-  const nextAction = getNextActionDetails(activeParcel.status, activeParcel);
+  const activeParcel = selectedParcel || parcels[0] || {
+    plotNumber: "112/3B",
+    surveyNo: "112/3B",
+    ulpin: "27-14-9021-M8H2B1",
+    ownerName: "Dattatray Pandurang Patil",
+    village: "Kalyan East",
+    district: "Thane",
+    state: "Maharashtra",
+    status: "VERIFICATION",
+    totalAwardAmount: 30160000,
+    riskScore: 78,
+    riskLevel: "HIGH"
+  };
 
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: `Namaste ${activeParcel.ownerName}! I am your AI Bhu-Sathi Assistant for BHUSETU. I am currently synched with your parcel Plot ${activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}). How can I assist you with your land acquisition, compensation award, or hearing schedule today?`
+      text: `Namaste! I am your Bhu-Sathi AI Decision Support Assistant for BHUSETU.\n\nI am currently synced with parcel Plot ${activeParcel.plotNumber || activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}) in ${activeParcel.village || 'Thane'}.\n\nHow can I assist you with parcel status, field demarcation, risk scores, alternative routes, or active disputes today?`
     }
   ]);
 
   const quickPrompts = [
-    "Why haven't I received my compensation?",
-    "What happens next for my land?",
-    "When is my legal hearing?",
-    "Explain my solatium calculation"
+    "What is the status of this parcel?",
+    "Why is this parcel high risk?",
+    "Which route has the lowest impact?",
+    "What disputes are active in this project?",
+    "Show parcels with area mismatch."
   ];
 
   const handleSend = (textToSend) => {
@@ -37,59 +49,70 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
     setTimeout(() => {
       let botReply = "";
 
-      if (query.includes('compensation') || query.includes('why haven') || query.includes('payment') || query.includes('dbt') || query.includes('money')) {
-        const dbtMsg = activeParcel.dbtStatus === 'DISBURSED_100'
-          ? `✓ 100% Funds Credited via Direct Benefit Transfer (DBT) to ${activeParcel.bankName} (Ref: ${activeParcel.dbtTransactionId || "DBT2026091299841"}) on ${activeParcel.dbtDate || "08 Sep 2026"}.`
-          : `⏳ Payment is in Bank Verification / Escrow Queue under PFMS. Next step is finance disbursement approval.`;
-
-        botReply = `I checked your land record for Plot ${activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}):\n\n` +
-          `• Registered Owner: ${activeParcel.ownerName}\n` +
-          `• Total Award Amount: ${formatINR(activeParcel.totalAwardAmount)}\n` +
-          `• Statutory Status: ${activeParcel.status.replace(/_/g, ' ')}\n` +
-          `• Payout Status: ${dbtMsg}\n\n` +
-          `You can view line-by-line breakdown in the "Compensation & DBT" tab or file a grievance if you notice any delay.`;
-      } 
-      else if (query.includes('next') || query.includes('what happens') || query.includes('stage') || query.includes('step')) {
-        botReply = `Here is what happens next for your land (Plot ${activeParcel.surveyNo}):\n\n` +
-          `• Current Stage: ${nextAction.stageTitle}\n` +
-          `• Immediate Next Action: ${nextAction.nextAction}\n` +
-          `• Responsible Authority: ${nextAction.responsibleAuthority}\n` +
-          `• Estimated Timeline: ${nextAction.timeline}\n\n` +
-          `You can track the complete 9-stage journey under the "Acquisition Journey" tab.`;
+      if (query.includes('status of this parcel') || query.includes('parcel status')) {
+        botReply = `📌 Status for Plot ${activeParcel.plotNumber || activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}):\n\n` +
+          `• Registered Owner: ${activeParcel.landowner || activeParcel.ownerName}\n` +
+          `• Survey Status: ${activeParcel.surveyStatus || 'Survey Done → Handed to LAO'}\n` +
+          `• Official Area: ${activeParcel.officialArea || activeParcel.areaHectares} Ha | Surveyed Area: ${activeParcel.surveyedArea || activeParcel.officialArea} Ha\n` +
+          `• GIS Demarcation: ${activeParcel.gisDemarcation || 'Demarcated (4 Coordinates)'}\n` +
+          `• Verification Score: ${activeParcel.verificationScore || 100}%\n` +
+          `• Expected Action: ${activeParcel.expectedNextAction || 'LAO Section 3G Solatium Award determination'}`;
       }
-      else if (query.includes('hearing') || query.includes('dispute') || query.includes('objection') || query.includes('case')) {
-        botReply = `Regarding your legal status for ULPIN ${activeParcel.ulpin}:\n\n` +
-          `• Active Case: CASE-2026-GGM-102 (Title & Co-Sharer Partition Dispute)\n` +
-          `• Next Statutory Hearing: 28 September 2026 at 11:30 AM\n` +
-          `• Presiding Officer: Court of District Collector / CALA, Gurugram\n` +
-          `• Action: You may attend the hearing in person or upload supporting ownership proofs in the "Document Vault" tab.`;
+      else if (query.includes('high risk') || query.includes('why is this parcel') || query.includes('risk score') || query.includes('risk')) {
+        botReply = `⚠️ Risk Analysis for Plot ${activeParcel.plotNumber || activeParcel.surveyNo} (Score: ${activeParcel.riskScore || 78}/100 - ${activeParcel.riskLevel || 'HIGH'}):\n\n` +
+          `1. Discrepancy Alert: ${activeParcel.alert || 'Land Classification variation between 7/12 RoR and ground inspection'}\n` +
+          `2. Encroachment Risk: ${activeParcel.encroachmentRisk || 'LOW'} (boundary pinned via 4 DGPS RTK ground markers)\n` +
+          `3. Corridor Delay Probability: ${activeParcel.delayProbability || '78%'}\n` +
+          `4. Recommended Action: Prioritize joint spot inspection and resolve title verification before statutory Section 19 notification.`;
       }
-      else if (query.includes('solatium') || query.includes('calculate') || query.includes('formula')) {
-        botReply = `Under the RFCTLARR Act 2013, your solatium is legally determined as follows:\n\n` +
-          `1. Base Land Value: ${formatINR(activeParcel.marketRatePerHa * activeParcel.areaHectares)} (${activeParcel.areaHectares} Ha at circle rate)\n` +
-          `2. Rural Distance Factor: 1.5x Multiplier\n` +
-          `3. Solatium: 100% compulsory statutory allowance (${formatINR(activeParcel.solatiumAmount || 12487500)})\n` +
-          `4. Additional Interest: 12% per annum from Sec 3A notification date\n` +
-          `• Total Determined Solatium Award: ${formatINR(activeParcel.totalAwardAmount)}`;
+      else if (query.includes('lowest impact') || query.includes('which route') || query.includes('route simulator') || query.includes('recommend')) {
+        botReply = `🏆 Pre-Acquisition Route Recommendation (MCDA Engine):\n\n` +
+          `• Recommended Route: ROUTE C (Impact Score: 39/100)\n` +
+          `• Compared to Route A (Score 82/100):\n` +
+          `   - 60% fewer affected families (250 vs 620)\n` +
+          `   - 75% fewer legal disputes (12 vs 48 cases)\n` +
+          `   - ₹350 Cr lower estimated statutory compensation (₹1,850 Cr vs ₹2,200 Cr)\n` +
+          `   - 6 months shorter estimated duration (8 vs 14 months)\n\n` +
+          `* Note: Route C is recommended in the synthetic demonstration dataset; final selection remains subject to competent authority approvals.`;
       }
-      else if (query.includes('ulpin') || query.includes('bhu aadhaar') || query.includes('survey')) {
-        botReply = `Your parcel details:\n\n` +
-          `• ULPIN (Bhu-Aadhaar): ${activeParcel.ulpin}\n` +
-          `• Survey Plot: ${activeParcel.surveyNo} (Khata: ${activeParcel.khataNo})\n` +
-          `• Location: ${activeParcel.village}, District ${activeParcel.district}, ${activeParcel.state}\n` +
-          `• Area: ${activeParcel.areaHectares} Hectares (${(activeParcel.areaHectares * 2.471).toFixed(2)} Acres)\n` +
-          `• Boundary: Digitally mapped and verified by Survey of India drone orthomosaics.`;
+      else if (query.includes('dispute') || query.includes('active disputes') || query.includes('objection')) {
+        botReply = `⚖️ Active Disputes in Project Corridor:\n\n` +
+          `1. Case LD-1042 (Plot 45/2A): Boundary Encroachment between Rameshwar Singh Yadav and Harpal Singh Yadav (0.16 Ha fence mismatch).\n` +
+          `2. Case LD-1043 (Plot 88/1A): Coparcener Share Exclusion (Sunita Manohar Deshmukh claiming 0.70 Ha statutory share under Hindu Succession Act).\n` +
+          `3. Case LD-1044 (Plot 92/4): Overlapping Deed Registrations in Hosakote Rural (0.28 Ha duplicate polygon).\n\n` +
+          `You can inspect detailed spatial overlays and evidentiary files under the "Land Dispute Radar" tab.`;
+      }
+      else if (query.includes('area mismatch') || query.includes('mismatch')) {
+        botReply = `🔍 Parcels Flagged with Area Mismatch:\n\n` +
+          `• Parcel 27-14-9022-P9K1A3 (Plot 88/1A, Shahapur, Palghar):\n` +
+          `   Official Area: 2.10 Ha | Surveyed Area: 2.38 Ha (0.28 Ha Variance - 13.3% mismatch).\n` +
+          `• Parcel 06-12-8891-K9X2A4 (Plot 45/2A, Sohna Rural, Gurugram):\n` +
+          `   Official Area: 1.82 Ha | Surveyed Area: 1.66 Ha (0.16 Ha Encroached by respondent fence).\n\n` +
+          `Recommendation: Open the "Interactive Polygon Node Editor" to re-verify boundary pins and update BhuStack ledger.`;
+      }
+      else if (query.includes('compensation') || query.includes('payment') || query.includes('solatium')) {
+        botReply = `💰 Compensation Summary for Plot ${activeParcel.plotNumber || activeParcel.surveyNo}:\n\n` +
+          `• Base Valuation: ${formatINR((activeParcel.marketRatePerHa || 5200000) * (activeParcel.officialArea || 1.45))}\n` +
+          `• RFCTLARR 2013 100% Solatium: ${formatINR(activeParcel.solatiumAmount || 15080000)}\n` +
+          `• Total Award Amount: ${formatINR(activeParcel.totalAwardAmount || 30160000)}\n` +
+          `• Disbursal Mode: Direct Benefit Transfer (DBT) to authenticated bank account via PFMS.`;
       }
       else {
-        botReply = `Under the RFCTLARR Act 2013 and National Highways Act 1956, land acquisition guarantees 100% compulsory solatium, transparent ULPIN GIS demarcation, and direct bank payouts. How can I help you specifically regarding Plot ${activeParcel.surveyNo}?`;
+        botReply = `Under the BhuSetu National Land Acquisition & Management Platform, I can assist with:\n\n` +
+          `• Parcel ULPIN lookup and boundary verification status\n` +
+          `• AI Risk prioritization and mismatch detection\n` +
+          `• Pre-acquisition Route Simulator MCDA scoring\n` +
+          `• Person-to-person land disputes (LD-1042, LD-1043, LD-1044)\n` +
+          `• RFCTLARR 2013 solatium and R&R entitlement tracking.\n\n` +
+          `What would you like to examine next?`;
       }
 
       setMessages(prev => [...prev, { sender: 'bot', text: botReply }]);
-    }, 600);
+    }, 500);
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-[2000]">
+    <div className="fixed bottom-5 right-5 z-[2000] font-sans">
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
@@ -100,8 +123,7 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping hidden md:inline" />
         </button>
       ) : (
-        <div className="bg-white border border-slate-300 rounded-3xl w-84 md:w-[420px] shadow-2xl flex flex-col overflow-hidden text-slate-900 border-2">
-          
+        <div className="bg-white border border-slate-300 rounded-3xl w-84 md:w-[440px] shadow-2xl flex flex-col overflow-hidden text-slate-900 border-2">
           {/* Chat Header */}
           <div className="bg-slate-900 p-3.5 border-b border-slate-800 flex items-center justify-between text-white">
             <div className="flex items-center space-x-2.5">
@@ -110,12 +132,12 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
               </div>
               <div>
                 <h4 className="text-xs font-black text-white flex items-center space-x-1.5 font-mono">
-                  <span>Bhu-Sathi Contextual AI</span>
+                  <span>Bhu-Sathi Decision Support AI</span>
                   <Sparkles className="w-3 h-3 text-amber-400" />
                 </h4>
                 <p className="text-[10px] text-emerald-400 font-mono font-bold flex items-center space-x-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Synced: Plot {activeParcel.surveyNo} ({activeParcel.ownerName})</span>
+                  <span>Synced: Plot {activeParcel.plotNumber || activeParcel.surveyNo} ({activeParcel.landowner || activeParcel.ownerName})</span>
                 </p>
               </div>
             </div>
@@ -131,18 +153,18 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
           {/* Active Context Banner */}
           <div className="bg-amber-50/90 border-b border-amber-200 px-3 py-1.5 flex items-center justify-between text-[11px] font-mono text-amber-950">
             <span>ULPIN: <strong>{activeParcel.ulpin}</strong></span>
-            <span className="font-bold text-emerald-800">{formatINR(activeParcel.totalAwardAmount)}</span>
+            <span className="font-bold text-emerald-800">{formatINR(activeParcel.totalAwardAmount || 30160000)}</span>
           </div>
 
           {/* Messages Container */}
-          <div className="p-3.5 space-y-3 h-80 overflow-y-auto text-xs font-medium bg-slate-50/50">
+          <div className="p-3.5 space-y-3 h-84 overflow-y-auto text-xs font-medium bg-slate-50/50">
             {messages.map((m, idx) => (
               <div 
                 key={idx} 
                 className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div 
-                  className={`p-3 rounded-2xl max-w-[85%] whitespace-pre-line leading-relaxed shadow-xs ${
+                  className={`p-3 rounded-2xl max-w-[85%] whitespace-pre-line leading-relaxed shadow-2xs ${
                     m.sender === 'user' 
                       ? 'bg-slate-900 text-white rounded-tr-none' 
                       : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none font-sans'
@@ -160,7 +182,7 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
               <button
                 key={i}
                 onClick={() => handleSend(qp)}
-                className="bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-900 border border-slate-200 px-2 py-1 rounded-lg shrink-0 transition-colors font-medium cursor-pointer"
+                className="bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-900 border border-slate-200 px-2.5 py-1 rounded-lg shrink-0 transition-colors font-semibold cursor-pointer"
               >
                 {qp}
               </button>
@@ -173,7 +195,7 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={`Ask about Plot ${activeParcel.surveyNo}, compensation, hearing...`}
+              placeholder={`Ask about Plot ${activeParcel.plotNumber || activeParcel.surveyNo}, route comparison, disputes...`}
               className="flex-1 bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 font-medium"
             />
             <button
@@ -183,7 +205,6 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
               <Send className="w-4 h-4" />
             </button>
           </form>
-
         </div>
       )}
     </div>
