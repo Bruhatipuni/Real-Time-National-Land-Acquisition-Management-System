@@ -29,9 +29,9 @@ export const PRESET_ROLES = [
   },
   {
     id: 'LAND_OFFICER',
-    title: 'Land Nodal Officer',
+    title: 'Surveyor',
     department: 'Survey & Land Revenue Nodal',
-    user: 'Anish Kumar (Land Officer)',
+    user: 'Anish Kumar (Surveyor)',
     icon: MapPin,
     badge: 'FIELD & SURVEY',
     badgeColor: 'bg-teal-500/10 text-teal-400 border-teal-500/30',
