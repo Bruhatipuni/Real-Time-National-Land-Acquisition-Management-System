@@ -13,7 +13,8 @@ import {
   CheckCircle2, 
   Clock,
   ExternalLink,
-  MapPin
+  MapPin,
+  Scroll
 } from 'lucide-react';
 import WhatHappensNextCard from './WhatHappensNextCard';
 import { formatINR } from '../../utils/compensationEngine';
@@ -51,6 +52,13 @@ export default function CitizenDashboard({ parcel, lang = 'en', onNavigateTab })
       desc: isHi ? 'सरकारी आदेश एवं साक्ष्य अपलोड' : 'Certified orders & citizen upload center',
       icon: FileText,
       color: 'bg-purple-500/10 text-purple-700 border-purple-300'
+    },
+    {
+      id: 'applyPapers',
+      title: isHi ? 'दस्तावेज़ हेतु आवेदन' : 'Apply for Papers',
+      desc: isHi ? 'जमाबंदी नकल, भू-आधार नक्शा एवं भारमुक्ति पत्र' : 'Certified Jamabandi, ULPIN map & NEC',
+      icon: Scroll,
+      color: 'bg-teal-500/10 text-teal-700 border-teal-300'
     },
     {
       id: 'legal',
