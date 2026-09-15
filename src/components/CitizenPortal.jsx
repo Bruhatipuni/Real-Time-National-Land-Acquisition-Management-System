@@ -111,7 +111,7 @@ export default function CitizenPortal({ parcels, selectedParcel, setSelectedParc
     } else {
       const textToRead = lang === 'hi'
         ? `भू-सेतु नागरिक पोर्टल में आपका स्वागत है। आपके भू-खंड का भू-आधार यूएलपीआईएन ${activeParcel.ulpin} है। भू-स्वामी ${activeParcel.ownerName}। वर्तमान स्थिति ${activeParcel.status}। कुल निर्धारित मुआवजा राशि ₹${activeParcel.totalAwardAmount} है।`
-        : `Welcome to BhuSetu Citizen Portal. Your parcel ULPIN is ${activeParcel.ulpin} registered to ${activeParcel.ownerName}. Current acquisition status is ${activeParcel.status.replace(/_/g, ' ')}. Total determined compensation award is ₹${activeParcel.totalAwardAmount}.`;
+        : `Welcome to BhoomiSetu Citizen Portal. Your parcel ULPIN is ${activeParcel.ulpin} registered to ${activeParcel.ownerName}. Current acquisition status is ${activeParcel.status.replace(/_/g, ' ')}. Total determined compensation award is ₹${activeParcel.totalAwardAmount}.`;
 
       const utterance = new SpeechSynthesisUtterance(textToRead);
       utterance.lang = lang === 'hi' ? 'hi-IN' : 'en-IN';
@@ -160,7 +160,7 @@ export default function CitizenPortal({ parcels, selectedParcel, setSelectedParc
             </div>
             <div>
               <h1 className="text-xs sm:text-sm font-black font-mono tracking-tight flex items-center space-x-1.5">
-                <span className="text-emerald-700">BHUSETU</span>
+                <span className="text-emerald-700">BHOOMISETU</span>
                 <span className="text-slate-400">/</span>
                 <span className="truncate">{t.portalTitle}</span>
               </h1>

@@ -1,4 +1,4 @@
-// Comprehensive BHUSETU National Land Acquisition & Management Mock Dataset
+// Comprehensive BHOOMISETU National Land Acquisition & Management Mock Dataset
 
 export const STAGES_LIST = [
   { id: 'IDENTIFIED', step: '01', title: 'Land Identification', desc: 'Survey plot boundary mapping, ULPIN Bhu-Aadhaar assignment & GIS tagging', slaDays: 30 },

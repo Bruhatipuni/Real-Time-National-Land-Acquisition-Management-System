@@ -13,7 +13,7 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: `Namaste ${activeParcel.ownerName}! I am your AI Bhu-Sathi Assistant for BHUSETU. I am currently synched with your parcel Plot ${activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}). How can I assist you with your land acquisition, compensation award, or hearing schedule today?`
+      text: `Namaste ${activeParcel.ownerName}! I am your AI Bhu-Sathi Assistant for BHOOMISETU. I am currently synched with your parcel Plot ${activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}). How can I assist you with your land acquisition, compensation award, or hearing schedule today?`
     }
   ]);
 
