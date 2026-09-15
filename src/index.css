@@ -3,10 +3,35 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-primary: #f8fafc;
+    --bg-surface: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --border-color: #e2e8f0;
+  }
+
+  html.dark {
+    --bg-primary: #090d16;
+    --bg-surface: #0f172a;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #1e293b;
+  }
+
+  html.contrast {
+    --bg-primary: #000000;
+    --bg-surface: #0a0a0a;
+    --text-primary: #ffffff;
+    --text-secondary: #e2e8f0;
+    --border-color: #f59e0b;
+  }
+
   body {
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 }
 
@@ -16,7 +41,7 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
@@ -26,7 +51,36 @@
   background: #94a3b8;
 }
 
-/* Leaflet Container customization for Light Theme */
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+html.contrast ::-webkit-scrollbar-thumb {
+  background: #f59e0b;
+}
+
+/* Glassmorphic utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+html.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+html.contrast .glass-panel {
+  background: #000000;
+  border: 2px solid #f59e0b;
+}
+
+/* Leaflet Container customization */
 .leaflet-container {
   width: 100%;
   height: 100%;
@@ -34,6 +88,15 @@
   border-radius: 0.75rem;
   z-index: 0 !important;
   position: relative !important;
+  transition: filter 0.3s ease;
+}
+
+html.dark .leaflet-container {
+  background-color: #0b1120 !important;
+}
+
+html.contrast .leaflet-container {
+  border: 2px solid #f59e0b !important;
 }
 
 .leaflet-pane {
@@ -49,10 +112,101 @@
   background: #ffffff !important;
   color: #0f172a !important;
   border: 1px solid #cbd5e1 !important;
-  border-radius: 0.5rem !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2) !important;
+}
+
+html.dark .leaflet-popup-content-wrapper {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid #334155 !important;
+}
+
+html.contrast .leaflet-popup-content-wrapper {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #f59e0b !important;
 }
 
 .leaflet-popup-tip {
   background: #ffffff !important;
+}
+
+html.dark .leaflet-popup-tip {
+  background: #0f172a !important;
+}
+
+html.contrast .leaflet-popup-tip {
+  background: #000000 !important;
+}
+
+/* Subtle glow animations */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 3s infinite ease-in-out;
+}
+
+/* Indian National Tricolor Ribbon Accent */
+.gov-tricolor-bar {
+  background: linear-gradient(
+    90deg,
+    #FF9933 0%,
+    #FF9933 33.33%,
+    #FFFFFF 33.33%,
+    #FFFFFF 66.66%,
+    #138808 66.66%,
+    #138808 100%
+  );
+  height: 3px;
+  width: 100%;
+}
+
+/* Government Card Styling with subtle elevation & hairline border */
+.gov-card {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px 0 rgba(15, 23, 42, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gov-card:hover {
+  border-color: rgba(203, 213, 225, 1);
+  box-shadow: 0 6px 20px -3px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+}
+
+/* Frosted glass government bar */
+.gov-glass-header {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+}
+
+/* Subtle glowing status dot */
+.status-beacon-pulse {
+  position: relative;
+}
+.status-beacon-pulse::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background-color: inherit;
+  opacity: 0.75;
+  animation: beacon-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes beacon-ping {
+  75%, 100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
 }

@@ -11,7 +11,8 @@ import {
   BarChart3, 
   ShieldCheck, 
   Radio,
-  GitBranch
+  GitBranch,
+  CheckCircle2
 } from 'lucide-react';
 
 export default function RealtimeParametersBar({ projects, parcels }) {
@@ -28,7 +29,7 @@ export default function RealtimeParametersBar({ projects, parcels }) {
 
   const keyParameters = [
     { num: '01', title: 'Land Proposed vs Acquired', val: `${totalAcquiredHa.toFixed(1)} / ${totalProposedHa.toFixed(1)} Ha`, sub: `${Math.round((totalAcquiredHa/totalProposedHa)*100)}% Acquired`, icon: Layers, color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
-    { num: '02', title: 'Notifications Issued (Sec 3A/3D)', val: `${notificationsCount + 14} Published`, sub: 'Gazette Verified', icon: Bell, color: 'text-purple-700', bg: 'bg-purple-50 border-purple-200' },
+    { num: '02', title: 'Notifications Issued (Sec 3A/3D)', val: `${notificationsCount + 14} Published`, sub: 'e-Gazette Verified', icon: Bell, color: 'text-purple-700', bg: 'bg-purple-50 border-purple-200' },
     { num: '03', title: 'Awards Declared (Sec 3G)', val: `${awardsCount + 28} Finalized`, sub: '100% Solatium Computed', icon: FileCheck, color: 'text-amber-800', bg: 'bg-amber-50 border-amber-200' },
     { num: '04', title: 'Compensation Assessed & Disbursed', val: `₹${totalDisbursedCr.toFixed(1)} / ₹${totalAllocatedCr.toFixed(1)} Cr`, sub: 'DBT Bank Direct Credit', icon: IndianRupee, color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
     { num: '05', title: 'Possession & Vesting Status', val: `${possessionCount + 112} Parcels Vested`, sub: 'Handover Certificates', icon: Building, color: 'text-blue-700', bg: 'bg-blue-50 border-blue-200' },
@@ -42,37 +43,59 @@ export default function RealtimeParametersBar({ projects, parcels }) {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-2 space-y-3">
-      <div className="bg-white border border-slate-200 rounded-xl p-3.5 flex items-center justify-between shadow-xs">
-        <div className="flex items-center space-x-2">
-          <Radio className="w-4 h-4 text-emerald-600 animate-pulse" />
-          <h3 className="text-xs font-black text-slate-900 font-mono uppercase tracking-wider">
-            15 KEY LAND ACQUISITION REAL-TIME PARAMETERS MONITORING BAR
-          </h3>
+    <div className="max-w-7xl mx-auto px-4 py-2 space-y-3 font-sans">
+      {/* Parameter Bar Header */}
+      <div className="gov-card rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+        <div className="flex items-center space-x-2.5">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+            <Radio className="w-4 h-4 text-emerald-600 animate-pulse" />
+          </div>
+          <div>
+            <h3 className="text-xs font-black text-slate-900 font-mono uppercase tracking-wider flex items-center space-x-2">
+              <span>REAL-TIME STATUTORY MONITORING PARAMETERS</span>
+            </h3>
+            <p className="text-[10px] font-medium text-slate-500">
+              National Cadastral Layer • PM Gati Shakti NMP Compliance
+            </p>
+          </div>
         </div>
-        <span className="text-[11px] font-mono text-amber-900 bg-amber-50 px-2.5 py-0.5 rounded border border-amber-300 font-bold">
-          DILRMP 3.0 Live Data Feed
-        </span>
+
+        <div className="flex items-center space-x-2 shrink-0">
+          <span className="flex items-center space-x-1.5 text-[10px] font-mono text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-bold">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+            <span>DILRMP 3.0 Live Sync</span>
+          </span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
+      {/* Grid of Parameter Tiles */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
         {keyParameters.map((param) => {
           const Icon = param.icon;
           return (
             <div 
               key={param.num}
-              className="bg-white border border-slate-200 hover:border-amber-400 rounded-xl p-3 flex flex-col justify-between space-y-1.5 transition-all shadow-xs"
+              className="gov-card hover:border-amber-400 rounded-xl p-3 flex flex-col justify-between space-y-1.5 transition-all group"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[9px] font-mono font-bold text-amber-900 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
                   P-{param.num}
                 </span>
-                <Icon className={`w-3.5 h-3.5 ${param.color}`} />
+                <div className="p-1 rounded-md bg-slate-50 group-hover:scale-110 transition-transform">
+                  <Icon className={`w-3.5 h-3.5 ${param.color}`} />
+                </div>
               </div>
+
               <div>
-                <h4 className="text-[11px] font-bold text-slate-700 leading-tight">{param.title}</h4>
-                <p className="text-xs font-mono font-black text-slate-900 mt-1">{param.val}</p>
-                <p className="text-[9px] text-slate-500 font-medium mt-0.5">{param.sub}</p>
+                <h4 className="text-[11px] font-bold text-slate-700 leading-tight group-hover:text-slate-950 transition-colors">
+                  {param.title}
+                </h4>
+                <p className="text-xs font-mono font-black text-slate-900 mt-1">
+                  {param.val}
+                </p>
+                <p className="text-[9px] text-slate-500 font-medium mt-0.5">
+                  {param.sub}
+                </p>
               </div>
             </div>
           );
@@ -81,3 +104,4 @@ export default function RealtimeParametersBar({ projects, parcels }) {
     </div>
   );
 }
+
