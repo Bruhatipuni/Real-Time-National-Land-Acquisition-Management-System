@@ -66,14 +66,53 @@ export default function App() {
     setCurrentUser(null);
   };
 
+  // Stage titles and expected next actions dictionary
+  const STAGE_META = {
+    IDENTIFIED: { title: "Land Identification", action: "Initiate Khata revenue record encumbrance verification & Aadhaar authentication" },
+    VERIFICATION: { title: "Land Verification", action: "Upload land revenue record (Khatauni) and conduct Field Surveyor inspection" },
+    PROPOSAL: { title: "Acquisition Proposal", action: "Submit corridor acquisition proposal for District Collector scrutiny" },
+    NOTICE: { title: "Notifications / Notice", action: "Publish Section 3A e-Gazette notification and issue public stakeholder notice" },
+    COMPENSATION: { title: "Compensation Process", action: "Calculate RFCTLARR 2013 100% solatium award & verify PFMS bank account for DBT" },
+    LEGAL: { title: "Legal / Objections", action: "Conduct Section 3C public objection hearing & resolve High Court stay disputes" },
+    APPROVAL: { title: "Approval / Acquisition", action: "Obtain District Collector & State Admin approval for Section 3G statutory award" },
+    ACQUIRED: { title: "Land Acquired", action: "Execute statutory vesting order & issue acquisition completion certificate" },
+    HANDOVER: { title: "Land Handover", action: "Issue Land Possession Certificate & execute R&R plot allotment" },
+    UTILIZATION: { title: "Project Utilization", action: "Monitor post-acquisition corridor construction & quarterly drone inspection" }
+  };
+
   // Function to advance a parcel's acquisition stage through all statutory stages
   const handleAdvanceStage = (parcelId) => {
+    const userRoleId = currentUser?.roleObj?.id || 'SUPER_ADMIN';
+    if (userRoleId === 'CITIZEN') {
+      alert("Role-Based Access Control (RBAC): Only authorized Government Officers can advance statutory acquisition stages.");
+      return;
+    }
+
     setParcels(prevParcels => 
       prevParcels.map(p => {
-        if (p.id === parcelId) {
+        if (p.id === parcelId || p.landId === parcelId) {
           const currentIndex = STAGE_ORDER.indexOf(p.status);
           const nextIndex = currentIndex < STAGE_ORDER.length - 1 ? currentIndex + 1 : currentIndex;
-          return { ...p, status: STAGE_ORDER[nextIndex] };
+          const nextStageId = STAGE_ORDER[nextIndex];
+          const meta = STAGE_META[nextStageId] || { title: nextStageId, action: "Proceed to next statutory milestone" };
+
+          // Update approval stepper state
+          const updatedApprovals = (p.approvals || []).map((app, idx) => {
+            if (idx <= nextIndex / 2) {
+              return { ...app, status: 'COMPLETED' };
+            } else if (idx === Math.ceil(nextIndex / 2)) {
+              return { ...app, status: 'PENDING' };
+            }
+            return { ...app, status: 'NOT_STARTED' };
+          });
+
+          return { 
+            ...p, 
+            status: nextStageId,
+            acquisitionStatus: meta.title,
+            expectedNextAction: meta.action,
+            approvals: updatedApprovals
+          };
         }
         return p;
       })
