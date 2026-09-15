@@ -1098,11 +1098,11 @@ export default function CentralMinistryCommandCenter({ projects = PROJECTS_DATA,
                     <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block">
                       Contributing Risk Factors:
                     </span>
-                    {riskAnalysis.factors.length === 0 ? (
+                    {(!riskAnalysis?.factors || riskAnalysis.factors.length === 0) ? (
                       <span className="text-xs text-emerald-700 font-medium">No active risk flags detected. Normal statutory pacing.</span>
                     ) : (
                       <div className="space-y-1">
-                        {riskAnalysis.factors.map((f, fIdx) => (
+                        {(riskAnalysis.factors || []).map((f, fIdx) => (
                           <div key={fIdx} className="flex items-center justify-between bg-slate-50 p-1.5 rounded-lg text-[11px]">
                             <span className="font-medium text-slate-700">{f.detail}</span>
                             <span className="font-mono font-black text-rose-700 shrink-0 ml-2">{f.weight}</span>

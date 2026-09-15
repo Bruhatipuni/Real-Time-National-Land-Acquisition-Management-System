@@ -273,7 +273,7 @@ export default function GrievanceTracker({ parcel, lang = 'en' }) {
 
                     {/* 4-Stage Stepper */}
                     <div className="grid grid-cols-4 gap-1 pt-1 pb-1">
-                      {grv.timeline.map((step, idx) => (
+                      {(grv.timeline || []).map((step, idx) => (
                         <div key={idx} className="text-center space-y-1">
                           <div className={`h-1.5 rounded-full ${
                             step.done ? 'bg-emerald-500' : step.active ? 'bg-orange-500 animate-pulse' : 'bg-slate-200'

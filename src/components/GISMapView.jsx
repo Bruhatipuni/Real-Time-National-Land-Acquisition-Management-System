@@ -349,7 +349,7 @@ export default function GISMapView({ projects, parcels, selectedParcel, setSelec
                   <p className="text-slate-400 italic text-[11px]">No documents uploaded yet for this parcel.</p>
                 ) : (
                   <div className="space-y-1.5">
-                    {selectedParcel.documents.map(doc => (
+                    {(selectedParcel.documents || []).map(doc => (
                       <div key={doc.id} className="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
                         <div className="flex items-center space-x-2">
                           <FileText className="w-3.5 h-3.5 text-blue-600" />

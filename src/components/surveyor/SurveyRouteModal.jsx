@@ -95,7 +95,7 @@ export default function SurveyRouteModal({ isOpen, onClose, onSelectParcel }) {
           </h4>
 
           <div className="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto">
-            {plan.waypoints.map((wp, idx) => {
+            {(plan?.waypoints || []).map((wp, idx) => {
               const isBase = wp.type === 'BASE';
               return (
                 <div 

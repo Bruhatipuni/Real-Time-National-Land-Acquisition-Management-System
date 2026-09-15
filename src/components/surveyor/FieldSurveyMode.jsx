@@ -760,7 +760,7 @@ export default function FieldSurveyMode({ parcel, onBack, onUpdateParcel }) {
                 )}
 
                 {/* 3. Numbered Survey Points (P1, P2, P3...) */}
-                {layers.surveyPoints && capturedPoints.map((pt, idx) => (
+                {layers.surveyPoints && (capturedPoints || []).map((pt, idx) => (
                   <Marker 
                     key={pt.id || idx} 
                     position={[pt.lat, pt.lng]}
@@ -965,7 +965,7 @@ export default function FieldSurveyMode({ parcel, onBack, onUpdateParcel }) {
                   </div>
 
                   <div className="max-h-40 overflow-y-auto divide-y divide-slate-100 border border-slate-200 rounded-xl">
-                    {capturedPoints.map((pt, i) => (
+                    {(capturedPoints || []).map((pt, i) => (
                       <div key={i} className="p-2 flex items-center justify-between text-[11px] font-mono hover:bg-slate-50">
                         <div className="flex items-center space-x-2">
                           <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-bold text-[9px] flex items-center justify-center">
@@ -1016,7 +1016,7 @@ export default function FieldSurveyMode({ parcel, onBack, onUpdateParcel }) {
 
                   {voiceNotes.length > 0 && (
                     <div className="space-y-1.5 max-h-28 overflow-y-auto pt-1">
-                      {voiceNotes.map((vn, i) => (
+                      {(voiceNotes || []).map((vn, i) => (
                         <div key={i} className="bg-white border border-slate-200 p-2 rounded-lg text-[10px] space-y-1">
                           <div className="flex items-center justify-between text-slate-500 font-mono">
                             <span>{vn.timestamp} ({vn.duration})</span>
@@ -1163,7 +1163,7 @@ export default function FieldSurveyMode({ parcel, onBack, onUpdateParcel }) {
 
                 {/* Evidence Grid */}
                 <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto">
-                  {evidencePhotos.map((photo, i) => (
+                  {(evidencePhotos || []).map((photo, i) => (
                     <div key={i} className="border border-slate-200 rounded-lg overflow-hidden bg-slate-50 space-y-1">
                       <div className="h-20 bg-slate-200 relative overflow-hidden">
                         <img src={photo.url} alt={photo.title} className="w-full h-full object-cover" />
