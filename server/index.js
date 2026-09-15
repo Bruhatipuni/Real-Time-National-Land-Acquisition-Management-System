@@ -12,13 +12,18 @@ import {
 import { calculateLARRCompensation } from '../src/utils/compensationEngine.js';
 import { getULPINDetails, validateULPINFormat } from '../src/utils/ulpinGenerator.js';
 
+import { connectDB } from './db.js';
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
 
-// In-memory data store for API mutations
+// Attempt DB connection on server launch
+connectDB().catch(err => console.error('[MongoDB Startup] Connection error:', err));
+
+// In-memory data store for API mutations & offline fallback
 let landsStore = [...PARCELS_DATA];
 let legalCasesStore = [...LEGAL_CASES_DATA];
 let auditLogsStore = [...RECENT_AUDIT_LOGS];
@@ -35,7 +40,7 @@ app.post('/api/auth/login', (req, res) => {
     user: {
       id: "USR-101",
       name: roleObj.name.split('(')[0].trim(),
-      email: email || `${roleId.toLowerCase()}@bhusetu.gov.in`,
+      email: email || `${roleId.toLowerCase()}@bhoomisetu.gov.in`,
       role: roleId,
       roleObj
     }
@@ -265,7 +270,7 @@ app.get('*', (req, res, next) => {
 
 if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(PORT, () => {
-    console.log(`BHUSETU Full-Stack REST Server running on http://localhost:${PORT}`);
+    console.log(`BhoomiSetu Full-Stack REST Server running on http://localhost:${PORT}`);
   });
 }
 
