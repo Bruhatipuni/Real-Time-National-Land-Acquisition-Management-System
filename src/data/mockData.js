@@ -1,15 +1,27 @@
-// Comprehensive National Land Acquisition Mock Dataset
+// Comprehensive BHUSETU National Land Acquisition & Management Mock Dataset
 
 export const STAGES_LIST = [
-  { id: 'LAND_IDENTIFICATION', step: '01', title: 'Land Identification', desc: 'Survey plot boundary mapping, ULPIN Bhu-Aadhaar assignment' },
-  { id: 'LAND_VERIFICATION', step: '02', title: 'Land Verification', desc: 'Encumbrance check, Khata record verification, Aadhaar authentication' },
-  { id: 'ACQUISITION_PROPOSAL', step: '03', title: 'Acquisition Proposal', desc: 'Implementing Agency proposal submission (NHAI, Railways, Coal)' },
-  { id: 'NOTIFICATIONS_NOTICE', step: '04', title: 'Notifications / Notice', desc: 'Section 3A Gazette publication & public stakeholder notices' },
-  { id: 'COMPENSATION_PROCESS', step: '05', title: 'Compensation Process', desc: 'RFCTLARR 2013 solatium calculation (100% solatium) & DBT bank payout' },
-  { id: 'LEGAL_OBJECTIONS', step: '06', title: 'Legal / Objections', desc: 'Section 3C public objection hearings, court stay tracking & dispute radar' },
-  { id: 'APPROVAL_ACQUISITION', step: '07', title: 'Approval / Acquisition', desc: 'Section 3G award approval & vesting order declaration' },
-  { id: 'LAND_HANDOVER', step: '08', title: 'Land Handover', desc: 'Possession certificate issuance & Rehabilitation & Resettlement (R&R)' },
-  { id: 'PROJECT_UTILIZATION', step: '09', title: 'Project Utilization', desc: 'Corridor construction tracking & post-acquisition asset monitoring' }
+  { id: 'IDENTIFIED', step: '01', title: 'Land Identification', desc: 'Survey plot boundary mapping, ULPIN Bhu-Aadhaar assignment & GIS tagging' },
+  { id: 'VERIFICATION', step: '02', title: 'Land Verification', desc: 'Encumbrance check, Khata record verification, ownership proof validation' },
+  { id: 'PROPOSAL', step: '03', title: 'Acquisition Proposal', desc: 'Implementing agency corridor proposal submission & nodal scrutiny' },
+  { id: 'NOTICE', step: '04', title: 'Notifications / Notice', desc: 'Section 3A Gazette publication & public stakeholder objection notice' },
+  { id: 'COMPENSATION', step: '05', title: 'Compensation Process', desc: 'RFCTLARR 2013 solatium calculation (100% solatium) & DBT bank disbursal' },
+  { id: 'LEGAL', step: '06', title: 'Legal / Objections', desc: 'Section 3C public objection hearings, High Court stay tracking & dispute radar' },
+  { id: 'APPROVAL', step: '07', title: 'Approval / Acquisition', desc: 'District Collector & State Admin approval, Section 3G statutory award sign-off' },
+  { id: 'ACQUIRED', step: '08', title: 'Land Acquired', desc: 'Vesting order declaration & statutory land acquisition completion' },
+  { id: 'HANDOVER', step: '09', title: 'Land Handover', desc: 'Possession certificate handover to project authority & R&R plot allotment' },
+  { id: 'UTILIZATION', step: '10', title: 'Project Utilization', desc: 'Corridor construction tracking & post-acquisition asset utilization' }
+];
+
+export const ROLES_LIST = [
+  { id: 'SUPER_ADMIN', name: 'Super Admin / Ministry Joint Secretary', level: 'National', scope: 'Full Access across all 11 stages & settings' },
+  { id: 'STATE_ADMIN', name: 'State Land Secretary (State Admin)', level: 'State', scope: 'Statewide approval, land records & statutory notices' },
+  { id: 'DISTRICT_OFFICER', name: 'District Officer / Collector (LAO)', level: 'District', scope: 'Proposal review, district approval & solatium sign-off' },
+  { id: 'LAND_OFFICER', name: 'Land Nodal Officer', level: 'District/Tehsil', scope: 'Land identification, verification & proposal submission' },
+  { id: 'FINANCE_OFFICER', name: 'Finance / DBT Disbursal Officer', level: 'Department', scope: 'Valuation, solatium calculation & PFMS bank payment' },
+  { id: 'LEGAL_OFFICER', name: 'Legal Nodal Officer', level: 'State/District', scope: 'Section 3C objections, court stay review & dispute resolution' },
+  { id: 'PROJECT_OFFICER', name: 'Project / Corridor Officer', level: 'Agency', scope: 'Land handover verification & project utilization progress' },
+  { id: 'CITIZEN', name: 'Citizen / Landowner Portal', level: 'Public', scope: 'ULPIN lookup, DBT payment status & Section 3C objection filing' }
 ];
 
 export const PROJECTS_DATA = [
@@ -18,7 +30,7 @@ export const PROJECTS_DATA = [
     name: "Delhi-Mumbai Industrial Expressway (Section IV)",
     agency: "National Highways Authority of India (NHAI)",
     ministry: "Ministry of Road Transport and Highways",
-    state: "Haryana & Rajasthan",
+    state: "Haryana",
     districts: ["Gurugram", "Nuh", "Alwar"],
     totalParcels: 342,
     acquiredParcels: 284,
@@ -27,11 +39,12 @@ export const PROJECTS_DATA = [
     budgetAllocatedCrores: 1250.0,
     budgetDisbursedCrores: 940.5,
     status: "IN_PROGRESS",
-    currentStage: "COMPENSATION_PROCESS",
+    currentStage: "COMPENSATION",
     displacedFamilies: 184,
     rehabilitatedFamilies: 156,
     activeDisputes: 12,
-    dssOptimizationScore: 92,
+    riskScore: 68,
+    riskTier: "MEDIUM",
     centerLat: 28.1487,
     centerLng: 76.9312,
     zoom: 11
@@ -50,11 +63,12 @@ export const PROJECTS_DATA = [
     budgetAllocatedCrores: 890.0,
     budgetDisbursedCrores: 580.2,
     status: "CRITICAL_BOTTLENECK",
-    currentStage: "NOTIFICATIONS_NOTICE",
+    currentStage: "NOTICE",
     displacedFamilies: 240,
     rehabilitatedFamilies: 120,
     activeDisputes: 28,
-    dssOptimizationScore: 74,
+    riskScore: 85,
+    riskTier: "HIGH",
     centerLat: 19.6967,
     centerLng: 72.7699,
     zoom: 11
@@ -73,11 +87,12 @@ export const PROJECTS_DATA = [
     budgetAllocatedCrores: 450.0,
     budgetDisbursedCrores: 432.0,
     status: "NEAR_COMPLETION",
-    currentStage: "PROJECT_UTILIZATION",
+    currentStage: "UTILIZATION",
     displacedFamilies: 42,
     rehabilitatedFamilies: 42,
     activeDisputes: 3,
-    dssOptimizationScore: 97,
+    riskScore: 18,
+    riskTier: "LOW",
     centerLat: 24.5362,
     centerLng: 81.3000,
     zoom: 11
@@ -86,22 +101,41 @@ export const PROJECTS_DATA = [
 
 export const PARCELS_DATA = [
   {
-    id: "PARCEL-001",
+    id: "LND-00125",
+    landId: "LND-00125",
     ulpin: "06-12-8891-K9X2A4",
-    surveyNo: "45/2A",
+    surveyNumber: "142/3",
+    surveyNo: "142/3",
     khataNo: "K-1082",
     projectId: "PROJ-NH48-EXPR",
+    projectName: "Delhi-Mumbai Industrial Expressway",
+    currentOwner: "Rameshwar Singh Yadav",
     ownerName: "Rameshwar Singh Yadav",
+    ownerPhone: "+91 98120 44102",
     aadhaarMasked: "XXXX-XXXX-8921",
     bankAccountVerified: true,
     bankName: "State Bank of India (Gurugram Branch)",
     ifsc: "SBIN0001245",
-    areaHectares: 1.85,
-    landType: "AGRICULTURAL_RURAL",
+    areaHectares: 4.5,
+    area: 4.5,
+    landType: "Agricultural",
+    tehsil: "Sohna",
     village: "Sohna Rural",
     district: "Gurugram",
     state: "Haryana",
-    status: "LAND_HANDOVER",
+    status: "HANDOVER",
+    acquisitionStatus: "Handover in Progress",
+    expectedNextAction: "Issue Land Possession Certificate & execute R&R housing allotment",
+    riskScore: 25,
+    riskTier: "LOW",
+    riskBreakdown: {
+      approvalDelay: 0,
+      legalDispute: 0,
+      compensationDelay: 10,
+      documentMissing: 0,
+      deadline: 15
+    },
+    recommendedAction: "Proceed with final possession sign-off by District Collector",
     marketRatePerHa: 4500000,
     multiplier: 1.5,
     solatiumAmount: 12487500,
@@ -116,27 +150,59 @@ export const PARCELS_DATA = [
       [28.1490, 76.9270]
     ],
     center: [28.1515, 76.9277],
-    encroachmentRisk: "LOW",
+    documents: [
+      { id: "DOC-101", title: "Khatauni Land Ownership Proof", type: "OWNERSHIP_PROOF", date: "2026-07-12", status: "VERIFIED", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+      { id: "DOC-102", title: "ULPIN Geo-Tagging Survey Map", type: "SURVEY_MAP", date: "2026-08-01", status: "VERIFIED", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+      { id: "DOC-103", title: "Section 3A Gazette Notification", type: "NOTICE", date: "2026-08-15", status: "VERIFIED", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+      { id: "DOC-104", title: "Section 3G Solatium Award Certificate", type: "AWARD_CERT", date: "2026-09-01", status: "SIGNED", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" }
+    ],
+    approvals: [
+      { step: "Land Identified", status: "COMPLETED", officer: "Land Officer Sohna", date: "2026-07-10" },
+      { step: "Verification Completed", status: "COMPLETED", officer: "Tehsildar Sohna", date: "2026-07-25" },
+      { step: "Proposal Submitted", status: "COMPLETED", officer: "NHAI Nodal Officer", date: "2026-08-05" },
+      { step: "District Approval", status: "COMPLETED", officer: "District Collector Gurugram", date: "2026-08-20" },
+      { step: "State Approval", status: "COMPLETED", officer: "State Land Secretary", date: "2026-09-02" }
+    ],
+    legalIssues: [],
     droneSurveyUrl: "https://assets.mixkit.co/videos/preview/mixkit-top-view-of-fields-and-roads-41584-large.mp4",
     droneSurveyDate: "2026-08-28"
   },
   {
-    id: "PARCEL-002",
+    id: "LND-00126",
+    landId: "LND-00126",
     ulpin: "06-12-8892-M3P9B1",
-    surveyNo: "45/2B",
+    surveyNumber: "142/4",
+    surveyNo: "142/4",
     khataNo: "K-1083",
     projectId: "PROJ-NH48-EXPR",
+    projectName: "Delhi-Mumbai Industrial Expressway",
+    currentOwner: "Sunita Devi & Harish Yadav",
     ownerName: "Sunita Devi & Harish Yadav",
+    ownerPhone: "+91 98451 90112",
     aadhaarMasked: "XXXX-XXXX-4412",
     bankAccountVerified: true,
     bankName: "Punjab National Bank (Nuh)",
     ifsc: "PUNB0109200",
-    areaHectares: 2.40,
-    landType: "AGRICULTURAL_RURAL",
+    areaHectares: 3.2,
+    area: 3.2,
+    landType: "Agricultural",
+    tehsil: "Sohna",
     village: "Sohna Rural",
     district: "Gurugram",
     state: "Haryana",
-    status: "COMPENSATION_PROCESS",
+    status: "COMPENSATION",
+    acquisitionStatus: "Compensation Assessment",
+    expectedNextAction: "Verify PFMS bank account details and trigger Direct Benefit Transfer (DBT)",
+    riskScore: 55,
+    riskTier: "MEDIUM",
+    riskBreakdown: {
+      approvalDelay: 20,
+      legalDispute: 0,
+      compensationDelay: 20,
+      documentMissing: 0,
+      deadline: 15
+    },
+    recommendedAction: "Expedite PFMS bank verification to avoid compensation delay penalty",
     marketRatePerHa: 4500000,
     multiplier: 1.5,
     solatiumAmount: 16200000,
@@ -151,27 +217,57 @@ export const PARCELS_DATA = [
       [28.1510, 76.9310]
     ],
     center: [28.1536, 76.9315],
-    encroachmentRisk: "MEDIUM",
+    documents: [
+      { id: "DOC-201", title: "Khatauni Land Ownership Proof", type: "OWNERSHIP_PROOF", date: "2026-07-14", status: "VERIFIED", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+      { id: "DOC-202", title: "Section 3A Gazette Notification", type: "NOTICE", date: "2026-08-18", status: "VERIFIED", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" }
+    ],
+    approvals: [
+      { step: "Land Identified", status: "COMPLETED", officer: "Land Officer Sohna", date: "2026-07-12" },
+      { step: "Verification Completed", status: "COMPLETED", officer: "Tehsildar Sohna", date: "2026-07-28" },
+      { step: "Proposal Submitted", status: "COMPLETED", officer: "NHAI Nodal Officer", date: "2026-08-08" },
+      { step: "District Approval", status: "PENDING", officer: "District Collector Gurugram", date: null },
+      { step: "State Approval", status: "NOT_STARTED", officer: "State Land Secretary", date: null }
+    ],
+    legalIssues: [],
     droneSurveyUrl: "https://assets.mixkit.co/videos/preview/mixkit-top-view-of-fields-and-roads-41584-large.mp4",
     droneSurveyDate: "2026-08-30"
   },
   {
-    id: "PARCEL-003",
+    id: "LND-00127",
+    landId: "LND-00127",
     ulpin: "06-12-8893-X7L1C9",
+    surveyNumber: "112/1",
     surveyNo: "112/1",
     khataNo: "K-4401",
     projectId: "PROJ-NH48-EXPR",
+    projectName: "Delhi-Mumbai Industrial Expressway",
+    currentOwner: "Gurdeep Singh Sandhu",
     ownerName: "Gurdeep Singh Sandhu",
+    ownerPhone: "+91 97201 88310",
     aadhaarMasked: "XXXX-XXXX-9011",
     bankAccountVerified: false,
     bankName: "HDFC Bank (Badshahpur)",
     ifsc: "HDFC0000192",
-    areaHectares: 3.10,
-    landType: "COMMERCIAL_SEMIURBAN",
+    areaHectares: 3.1,
+    area: 3.1,
+    landType: "Commercial",
+    tehsil: "Tauru",
     village: "Taurupath",
     district: "Nuh",
     state: "Haryana",
-    status: "LEGAL_OBJECTIONS",
+    status: "LEGAL",
+    acquisitionStatus: "Legal Objection Under Review",
+    expectedNextAction: "Legal Officer review of Section 3C ownership dispute appeal under High Court Case CASE-102",
+    riskScore: 85,
+    riskTier: "HIGH",
+    riskBreakdown: {
+      approvalDelay: 20,
+      legalDispute: 30,
+      compensationDelay: 20,
+      documentMissing: 15,
+      deadline: 0
+    },
+    recommendedAction: "Prioritize legal review and execute court escrow deposit for compensation",
     marketRatePerHa: 6800000,
     multiplier: 1.25,
     solatiumAmount: 26350000,
@@ -186,28 +282,59 @@ export const PARCELS_DATA = [
       [28.1440, 76.9340]
     ],
     center: [28.1466, 76.9352],
-    encroachmentRisk: "HIGH",
-    disputeReason: "Title overlap claim between two brothers under SO-18 High Court Appeal",
+    documents: [
+      { id: "DOC-301", title: "High Court Interim Stay Order", type: "LEGAL_DOCUMENT", date: "2026-09-01", status: "PENDING_HEARING", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+      { id: "DOC-302", title: "Section 3C Objection Filing Copy", type: "OBJECTION_NOTICE", date: "2026-08-22", status: "UNDER_REVIEW", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" }
+    ],
+    approvals: [
+      { step: "Land Identified", status: "COMPLETED", officer: "Land Officer Tauru", date: "2026-07-15" },
+      { step: "Verification Completed", status: "COMPLETED", officer: "Tehsildar Tauru", date: "2026-08-01" },
+      { step: "Proposal Submitted", status: "COMPLETED", officer: "NHAI Nodal Officer", date: "2026-08-10" },
+      { step: "District Approval", status: "REJECTED_LEGAL_STAY", officer: "District Collector Nuh", date: "2026-08-25" },
+      { step: "State Approval", status: "NOT_STARTED", officer: "State Land Secretary", date: null }
+    ],
+    legalIssues: [
+      { caseId: "CASE-102", issue: "Ownership & Partition dispute between co-sharers under SO-18 High Court Appeal", status: "Under Review", assignedOfficer: "Legal Nodal Officer Nuh" }
+    ],
     droneSurveyUrl: "https://assets.mixkit.co/videos/preview/mixkit-top-view-of-fields-and-roads-41584-large.mp4",
     droneSurveyDate: "2026-09-02"
   },
   {
-    id: "PARCEL-004",
+    id: "LND-00128",
+    landId: "LND-00128",
     ulpin: "06-12-8894-R4K8D2",
+    surveyNumber: "88/C",
     surveyNo: "88/C",
     khataNo: "K-302",
     projectId: "PROJ-NH48-EXPR",
+    projectName: "Delhi-Mumbai Industrial Expressway",
+    currentOwner: "Devendra Prakash Sharma",
     ownerName: "Devendra Prakash Sharma",
+    ownerPhone: "+91 99881 22340",
     aadhaarMasked: "XXXX-XXXX-1123",
     bankAccountVerified: true,
     bankName: "Canara Bank",
     ifsc: "CNRB0002102",
-    areaHectares: 1.20,
-    landType: "AGRICULTURAL_RURAL",
+    areaHectares: 1.2,
+    area: 1.2,
+    landType: "Agricultural",
+    tehsil: "Tauru",
     village: "Taurupath",
     district: "Nuh",
     state: "Haryana",
-    status: "NOTIFICATIONS_NOTICE",
+    status: "NOTICE",
+    acquisitionStatus: "Gazette Notice Published",
+    expectedNextAction: "Complete 21-day Section 3C public objection window and hold stakeholder meeting",
+    riskScore: 35,
+    riskTier: "MEDIUM",
+    riskBreakdown: {
+      approvalDelay: 0,
+      legalDispute: 0,
+      compensationDelay: 20,
+      documentMissing: 15,
+      deadline: 0
+    },
+    recommendedAction: "Publish Gazette notice in regional newspapers & collect land valuation records",
     marketRatePerHa: 4200000,
     multiplier: 1.5,
     solatiumAmount: 7560000,
@@ -222,27 +349,56 @@ export const PARCELS_DATA = [
       [28.1400, 76.9370]
     ],
     center: [28.1430, 76.9380],
-    encroachmentRisk: "LOW",
+    documents: [
+      { id: "DOC-401", title: "Section 3A Gazette Notification", type: "GAZETTE_NOTICE", date: "2026-09-04", status: "PUBLISHED", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" }
+    ],
+    approvals: [
+      { step: "Land Identified", status: "COMPLETED", officer: "Land Officer Tauru", date: "2026-08-01" },
+      { step: "Verification Completed", status: "COMPLETED", officer: "Tehsildar Tauru", date: "2026-08-15" },
+      { step: "Proposal Submitted", status: "COMPLETED", officer: "NHAI Nodal Officer", date: "2026-08-28" },
+      { step: "District Approval", status: "NOT_STARTED", officer: "District Collector Nuh", date: null },
+      { step: "State Approval", status: "NOT_STARTED", officer: "State Land Secretary", date: null }
+    ],
+    legalIssues: [],
     droneSurveyUrl: "https://assets.mixkit.co/videos/preview/mixkit-top-view-of-fields-and-roads-41584-large.mp4",
     droneSurveyDate: "2026-09-04"
   },
   {
-    id: "PARCEL-005",
+    id: "LND-00129",
+    landId: "LND-00129",
     ulpin: "06-12-8895-Z1N3E8",
+    surveyNumber: "90/A",
     surveyNo: "90/A",
     khataNo: "K-305",
     projectId: "PROJ-NH48-EXPR",
+    projectName: "Delhi-Mumbai Industrial Expressway",
+    currentOwner: "Mahesh Kumar Saini",
     ownerName: "Mahesh Kumar Saini",
+    ownerPhone: "+91 94112 00192",
     aadhaarMasked: "XXXX-XXXX-7781",
     bankAccountVerified: true,
     bankName: "State Bank of India",
     ifsc: "SBIN0004921",
-    areaHectares: 2.10,
-    landType: "AGRICULTURAL_RURAL",
+    areaHectares: 2.1,
+    area: 2.1,
+    landType: "Agricultural",
+    tehsil: "Tauru",
     village: "Taurupath",
     district: "Nuh",
     state: "Haryana",
-    status: "PROJECT_UTILIZATION",
+    status: "UTILIZATION",
+    acquisitionStatus: "Corridor Infrastructure Construction Active",
+    expectedNextAction: "Monitor post-acquisition asset construction & quarterly drone inspection",
+    riskScore: 10,
+    riskTier: "LOW",
+    riskBreakdown: {
+      approvalDelay: 0,
+      legalDispute: 0,
+      compensationDelay: 0,
+      documentMissing: 0,
+      deadline: 10
+    },
+    recommendedAction: "Corridor asset fully acquired & utilized. Maintain quarterly drone log.",
     marketRatePerHa: 4200000,
     multiplier: 1.5,
     solatiumAmount: 13230000,
@@ -257,27 +413,57 @@ export const PARCELS_DATA = [
       [28.1360, 76.9400]
     ],
     center: [28.1390, 76.9410],
-    encroachmentRisk: "LOW",
+    documents: [
+      { id: "DOC-501", title: "Final Possession Handover Certificate", type: "HANDOVER_CERT", date: "2026-09-08", status: "SIGNED", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+      { id: "DOC-502", title: "Project Utilization Completion Report", type: "UTILIZATION_REPORT", date: "2026-09-10", status: "APPROVED", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" }
+    ],
+    approvals: [
+      { step: "Land Identified", status: "COMPLETED", officer: "Land Officer Tauru", date: "2026-06-10" },
+      { step: "Verification Completed", status: "COMPLETED", officer: "Tehsildar Tauru", date: "2026-06-25" },
+      { step: "Proposal Submitted", status: "COMPLETED", officer: "NHAI Nodal Officer", date: "2026-07-05" },
+      { step: "District Approval", status: "COMPLETED", officer: "District Collector Nuh", date: "2026-07-20" },
+      { step: "State Approval", status: "COMPLETED", officer: "State Land Secretary", date: "2026-08-02" }
+    ],
+    legalIssues: [],
     droneSurveyUrl: "https://assets.mixkit.co/videos/preview/mixkit-top-view-of-fields-and-roads-41584-large.mp4",
     droneSurveyDate: "2026-09-05"
   },
   {
-    id: "PARCEL-006",
+    id: "LND-00130",
+    landId: "LND-00130",
     ulpin: "06-12-8896-Y2K9F1",
+    surveyNumber: "12/4",
     surveyNo: "12/4",
     khataNo: "K-881",
     projectId: "PROJ-NH48-EXPR",
+    projectName: "Delhi-Mumbai Industrial Expressway",
+    currentOwner: "Rakesh Kumar Bishnoi",
     ownerName: "Rakesh Kumar Bishnoi",
+    ownerPhone: "+91 91200 44810",
     aadhaarMasked: "XXXX-XXXX-5521",
     bankAccountVerified: true,
     bankName: "State Bank of India",
     ifsc: "SBIN0001122",
-    areaHectares: 1.50,
-    landType: "AGRICULTURAL_RURAL",
+    areaHectares: 1.5,
+    area: 1.5,
+    landType: "Agricultural",
+    tehsil: "Sohna",
     village: "Sohna Rural",
     district: "Gurugram",
     state: "Haryana",
-    status: "LAND_IDENTIFICATION",
+    status: "IDENTIFIED",
+    acquisitionStatus: "Land Plot Identified & Tagged",
+    expectedNextAction: "Initiate Khata revenue record encumbrance verification & Aadhaar authentication",
+    riskScore: 20,
+    riskTier: "LOW",
+    riskBreakdown: {
+      approvalDelay: 0,
+      legalDispute: 0,
+      compensationDelay: 0,
+      documentMissing: 15,
+      deadline: 5
+    },
+    recommendedAction: "Upload land revenue record (Khatauni) and initiate Field Surveyor inspection",
     marketRatePerHa: 4500000,
     multiplier: 1.5,
     solatiumAmount: 10125000,
@@ -292,9 +478,102 @@ export const PARCELS_DATA = [
       [28.1530, 76.9350]
     ],
     center: [28.1557, 76.9355],
-    encroachmentRisk: "LOW",
+    documents: [],
+    approvals: [
+      { step: "Land Identified", status: "COMPLETED", officer: "Land Officer Sohna", date: "2026-09-11" },
+      { step: "Verification Completed", status: "NOT_STARTED", officer: "Tehsildar Sohna", date: null },
+      { step: "Proposal Submitted", status: "NOT_STARTED", officer: "NHAI Nodal Officer", date: null },
+      { step: "District Approval", status: "NOT_STARTED", officer: "District Collector Gurugram", date: null },
+      { step: "State Approval", status: "NOT_STARTED", officer: "State Land Secretary", date: null }
+    ],
+    legalIssues: [],
     droneSurveyUrl: "https://assets.mixkit.co/videos/preview/mixkit-top-view-of-fields-and-roads-41584-large.mp4",
     droneSurveyDate: "2026-09-11"
+  }
+];
+
+export const LEGAL_CASES_DATA = [
+  {
+    id: "CASE-102",
+    caseId: "CASE-102",
+    landId: "LND-00127",
+    ulpin: "06-12-8893-X7L1C9",
+    surveyNumber: "112/1",
+    issue: "Section 3C Title & Co-Sharer Partition Dispute under High Court Appeal SO-18",
+    status: "Under Review",
+    assignedOfficer: "Legal Nodal Officer Nuh",
+    courtName: "High Court of Punjab & Haryana",
+    petitioner: "Gurdeep Singh Sandhu & Co-sharers",
+    nextHearingDate: "2026-09-28",
+    priority: "HIGH"
+  },
+  {
+    id: "CASE-108",
+    caseId: "CASE-108",
+    landId: "LND-00126",
+    ulpin: "06-12-8892-M3P9B1",
+    surveyNumber: "142/4",
+    issue: "Tree & Structural Valuation Solatium Enhancement Claim",
+    status: "Pending Hearing",
+    assignedOfficer: "Land Nodal Officer Sohna",
+    courtName: "District Collectorate Tribunal",
+    petitioner: "Harish Yadav",
+    nextHearingDate: "2026-10-05",
+    priority: "MEDIUM"
+  }
+];
+
+export const NOTIFICATIONS_DATA = [
+  { id: "NOTIF-01", title: "New District Approval Request", message: "Land parcel LND-00126 requires District Collector approval for Section 3G Award.", type: "APPROVAL", read: false, date: "10 mins ago" },
+  { id: "NOTIF-02", title: "High Risk Score Alert (Score 85)", message: "Land parcel LND-00127 flagged as HIGH RISK due to active legal stay & document delay.", type: "ALERT", read: false, date: "1 hour ago" },
+  { id: "NOTIF-03", title: "PFMS DBT Compensation Pending", message: "2 parcels in Sohna Tehsil pending PFMS bank account verification.", type: "FINANCE", read: true, date: "3 hours ago" },
+  { id: "NOTIF-04", title: "Section 3A Gazette Published", message: "e-Gazette Notification published for Taurupath corridor (Parcel LND-00128).", type: "NOTICE", read: true, date: "1 day ago" }
+];
+
+export const STATE_PERFORMANCE_STATS = [
+  { state: "Haryana", totalLands: 4200, activeAcquisition: 850, pendingApprovals: 120, disputes: 42, dbtPercentage: 94 },
+  { state: "Maharashtra", totalLands: 3100, activeAcquisition: 680, pendingApprovals: 145, disputes: 68, dbtPercentage: 68 },
+  { state: "Uttar Pradesh", totalLands: 2800, activeAcquisition: 450, pendingApprovals: 82, disputes: 39, dbtPercentage: 88 },
+  { state: "Gujarat", totalLands: 1450, activeAcquisition: 210, pendingApprovals: 40, disputes: 18, dbtPercentage: 92 },
+  { state: "Madhya Pradesh", totalLands: 900, activeAcquisition: 120, pendingApprovals: 25, disputes: 16, dbtPercentage: 96 }
+];
+
+export const RECENT_AUDIT_LOGS = [
+  {
+    id: "LOG-901",
+    timestamp: "2026-09-15 10:15:20",
+    user: "District Collector Gurugram",
+    role: "DISTRICT_OFFICER",
+    action: "SECTION_3G_AWARD_APPROVED",
+    entity: "Land Parcel",
+    entityId: "LND-00125",
+    oldStatus: "APPROVAL",
+    newStatus: "HANDOVER",
+    details: "Approved ₹2.62 Cr solatium award certificate under RFCTLARR 2013."
+  },
+  {
+    id: "LOG-902",
+    timestamp: "2026-09-15 09:40:11",
+    user: "PFMS DBT System",
+    role: "FINANCE_OFFICER",
+    action: "DBT_BANK_DISBURSED",
+    entity: "Compensation",
+    entityId: "LND-00125",
+    oldStatus: "PENDING",
+    newStatus: "DISBURSED_100",
+    details: "Direct Benefit Transfer of ₹2.62 Cr credited to SBI Account ending 8921."
+  },
+  {
+    id: "LOG-903",
+    timestamp: "2026-09-14 18:05:44",
+    user: "Legal Nodal Officer Nuh",
+    role: "LEGAL_OFFICER",
+    action: "LEGAL_CASE_REGISTERED",
+    entity: "Legal Case",
+    entityId: "CASE-102",
+    oldStatus: "NONE",
+    newStatus: "Under Review",
+    details: "Section 3C objection appeal registered under High Court stay CASE-102."
   }
 ];
 
@@ -326,52 +605,5 @@ export const ROUTE_ALIGNMENT_OPTIONS = [
     litigationRiskIndex: "HIGH (68% Displaced Family Disputes)",
     recommendationBadge: "HIGH DISPLACEMENT RISK",
     score: 68
-  }
-];
-
-export const STATE_PERFORMANCE_STATS = [
-  { state: "Haryana", targetHa: 850, acquiredHa: 790, dbtPercentage: 94, pendingDisputes: 14 },
-  { state: "Maharashtra", targetHa: 1200, acquiredHa: 810, dbtPercentage: 68, pendingDisputes: 42 },
-  { state: "Uttar Pradesh", targetHa: 1500, acquiredHa: 1320, dbtPercentage: 88, pendingDisputes: 29 },
-  { state: "Gujarat", targetHa: 950, acquiredHa: 890, dbtPercentage: 92, pendingDisputes: 9 },
-  { state: "Madhya Pradesh", targetHa: 1100, acquiredHa: 1040, dbtPercentage: 96, pendingDisputes: 6 }
-];
-
-export const RECENT_AUDIT_LOGS = [
-  {
-    id: "LOG-901",
-    timestamp: "2026-09-14 18:42:10",
-    action: "SECTION_3G_AWARD_PASSED",
-    ulpin: "06-12-8891-K9X2A4",
-    user: "District Collector / LAO Gurugram",
-    details: "Award ₹2.62 Cr finalized. Solatium 100% computed under LARR 2013.",
-    txHash: "0x8f3a12b...e49a"
-  },
-  {
-    id: "LOG-902",
-    timestamp: "2026-09-14 16:15:33",
-    action: "DBT_PAYMENT_DISBURSED",
-    ulpin: "06-12-8895-Z1N3E8",
-    user: "PFMS / Public Financial Management System",
-    details: "Direct Benefit Transfer ₹2.77 Cr credited to SBI A/C ending 4921.",
-    txHash: "0x77c2901...11bf"
-  },
-  {
-    id: "LOG-903",
-    timestamp: "2026-09-14 14:05:00",
-    action: "DRONE_SURVEY_VERIFIED",
-    ulpin: "06-12-8892-M3P9B1",
-    user: "Field Surveyor Inspection Agent",
-    details: "High-resolution orthomosaic drone video uploaded & boundary verified.",
-    txHash: "0x310a29b...990c"
-  },
-  {
-    id: "LOG-904",
-    timestamp: "2026-09-14 11:20:45",
-    action: "SECTION_3A_NOTICE_PUBLISHED",
-    ulpin: "06-12-8894-R4K8D2",
-    user: "NHAI Nodal Officer",
-    details: "Gazette Notification published in e-Gazette portal.",
-    txHash: "0x44901fa...77b1"
   }
 ];

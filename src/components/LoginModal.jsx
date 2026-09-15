@@ -10,39 +10,82 @@ import {
   CheckCircle2,
   X,
   User,
-  ArrowRight
+  ArrowRight,
+  Scale,
+  CreditCard,
+  MapPin
 } from 'lucide-react';
 
 export const PRESET_ROLES = [
   {
-    id: 'MINISTRY',
-    title: 'Central Ministry Admin',
+    id: 'SUPER_ADMIN',
+    title: 'Super Admin / Ministry Joint Secretary',
     department: 'Ministry of Rural Development & MoRTH',
-    user: 'Dr. Rajesh Sharma (Joint Secretary)',
+    user: 'Dr. Rajesh Sharma (Super Admin)',
     icon: Building2,
-    badge: 'FULL SYSTEM ACCESS',
+    badge: 'SUPER ADMIN',
     badgeColor: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
-    description: 'National overview, project portfolio approval, state heatmaps, fund allocation & policy decision support.'
+    description: 'National overview, portfolio approval, heatmaps, fund allocation & policy decision support.'
   },
   {
-    id: 'LAO',
-    title: 'Land Acquisition Officer (LAO)',
-    department: 'Office of District Collector, Gurugram',
-    user: 'Shri Vikramaditya Singh (IAS / LAO)',
-    icon: ShieldCheck,
-    badge: 'STATUTORY AUTHORITY',
-    badgeColor: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-    description: 'Section 3C objection hearings, Section 3G solatium award determination, gazette notices, and possession orders.'
-  },
-  {
-    id: 'SURVEYOR',
-    title: 'Field Surveyor & GIS Nodal',
-    department: 'Survey of India / District Nodal',
-    user: 'Anish Kumar (Senior Surveyor)',
-    icon: Compass,
-    badge: 'FIELD INSPECTOR',
+    id: 'STATE_ADMIN',
+    title: 'State Admin (State Secretary)',
+    department: 'Revenue & Land Reforms Department',
+    user: 'Smt. Anita Deshmukh (State Secretary)',
+    icon: Building,
+    badge: 'STATE ADMIN',
     badgeColor: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-    description: 'ULPIN Bhu-Aadhaar geo-tagging, plot boundary verification, orthomosaic drone video upload, and encumbrance checks.'
+    description: 'Statewide approval, land revenue record verification & statutory notices oversight.'
+  },
+  {
+    id: 'DISTRICT_OFFICER',
+    title: 'District Officer / Collector (LAO)',
+    department: 'Office of District Collector, Gurugram',
+    user: 'Shri Vikramaditya Singh (District Collector)',
+    icon: ShieldCheck,
+    badge: 'DISTRICT APPROVER',
+    badgeColor: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+    description: 'Proposal review, district approval, Section 3G solatium award signing & vesting orders.'
+  },
+  {
+    id: 'LAND_OFFICER',
+    title: 'Land Nodal Officer',
+    department: 'Survey & Land Revenue Nodal',
+    user: 'Anish Kumar (Land Officer)',
+    icon: MapPin,
+    badge: 'FIELD & SURVEY',
+    badgeColor: 'bg-teal-500/10 text-teal-400 border-teal-500/30',
+    description: 'ULPIN Bhu-Aadhaar plot tagging, boundary verification, drone survey & proposal filing.'
+  },
+  {
+    id: 'FINANCE_OFFICER',
+    title: 'Finance / DBT Disbursal Officer',
+    department: 'Public Financial Management System (PFMS)',
+    user: 'Rakesh Verma (Finance Officer)',
+    icon: CreditCard,
+    badge: 'PAYMENT & DBT',
+    badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+    description: 'LARR 2013 solatium calculation, bank account verification & Direct Benefit Transfer.'
+  },
+  {
+    id: 'LEGAL_OFFICER',
+    title: 'Legal Nodal Officer',
+    department: 'State Legal Nodal Cell',
+    user: 'Adv. Suresh K. Nair (Legal Officer)',
+    icon: Scale,
+    badge: 'LEGAL & DISPUTES',
+    badgeColor: 'bg-red-500/10 text-red-400 border-red-500/30',
+    description: 'Section 3C objections, High Court stay order tracking & dispute resolution hearings.'
+  },
+  {
+    id: 'PROJECT_OFFICER',
+    title: 'Project / Corridor Officer',
+    department: 'National Highways Authority of India (NHAI)',
+    user: 'Er. Meenakshi Sundaram (Project Officer)',
+    icon: Compass,
+    badge: 'PROJECT EXECUTION',
+    badgeColor: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
+    description: 'Corridor acquisition proposals, land handover taking & project asset utilization.'
   },
   {
     id: 'CITIZEN',
@@ -50,24 +93,14 @@ export const PRESET_ROLES = [
     department: 'Public Citizen Portal',
     user: 'Rameshwar Singh Yadav (Landowner)',
     icon: UserCheck,
-    badge: 'PUBLIC ACCESS',
-    badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-    description: 'Check land status, view LARR 2013 solatium calculation, track DBT bank payouts, and file Section 3C objections.'
-  },
-  {
-    id: 'AGENCY',
-    title: 'Implementing Project Agency',
-    department: 'National Highways Authority of India (NHAI)',
-    user: 'Er. Meenakshi Sundaram (Chief Engineer)',
-    icon: Building,
-    badge: 'PROPOSER & EXECUTOR',
-    badgeColor: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
-    description: 'Submit land acquisition proposals, route alignment optimization requests, land handover taking, and project utilization tracking.'
+    badge: 'PUBLIC CITIZEN',
+    badgeColor: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30',
+    description: 'ULPIN Bhu-Aadhaar lookup, solatium award status, DBT payout check & objection filing.'
   }
 ];
 
 export default function LoginModal({ isOpen, onClose, onSelectRole, currentRole }) {
-  const [selectedRole, setSelectedRole] = useState(currentRole || 'MINISTRY');
+  const [selectedRole, setSelectedRole] = useState(currentRole || 'SUPER_ADMIN');
 
   if (!isOpen) return null;
 
@@ -79,7 +112,7 @@ export default function LoginModal({ isOpen, onClose, onSelectRole, currentRole 
 
   return (
     <div className="fixed inset-0 z-[3000] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4">
           <div className="flex items-center space-x-3">
@@ -104,7 +137,7 @@ export default function LoginModal({ isOpen, onClose, onSelectRole, currentRole 
         </div>
 
         {/* Role Persona Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[440px] overflow-y-auto pr-1">
           {PRESET_ROLES.map((role) => {
             const Icon = role.icon;
             const isCurrent = selectedRole === role.id;
@@ -113,7 +146,7 @@ export default function LoginModal({ isOpen, onClose, onSelectRole, currentRole 
               <div
                 key={role.id}
                 onClick={() => setSelectedRole(role.id)}
-                className={`p-4 rounded-xl border transition-all cursor-pointer space-y-2 relative ${
+                className={`p-3.5 rounded-xl border transition-all cursor-pointer space-y-2 relative ${
                   isCurrent 
                     ? 'bg-slate-950 border-amber-500 ring-2 ring-amber-500/20 shadow-lg' 
                     : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'

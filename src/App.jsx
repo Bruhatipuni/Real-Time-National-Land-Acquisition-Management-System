@@ -9,6 +9,9 @@ import AnalyticsDashboard from './components/AnalyticsDashboard';
 import BhuSathiChatbot from './components/BhuSathiChatbot';
 import AuditLogModal from './components/AuditLogModal';
 import ProposalSubmissionModal from './components/ProposalSubmissionModal';
+import DocumentVaultModal from './components/DocumentVaultModal';
+import LegalDisputesModal from './components/LegalDisputesModal';
+import NotificationsModal from './components/NotificationsModal';
 import AuthScreen from './components/AuthScreen';
 import { PROJECTS_DATA, PARCELS_DATA } from './data/mockData';
 
@@ -25,19 +28,23 @@ export default function App() {
   // Modals
   const [isAuditOpen, setIsAuditOpen] = useState(false);
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
+  const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
+  const [isLegalOpen, setIsLegalOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [targetStageFilter, setTargetStageFilter] = useState('ALL');
 
-  // Stage sequence order for 9 Land Management stages
+  // Stage sequence order for 10 Statutory Land Management stages
   const STAGE_ORDER = [
-    'LAND_IDENTIFICATION',
-    'LAND_VERIFICATION',
-    'ACQUISITION_PROPOSAL',
-    'NOTIFICATIONS_NOTICE',
-    'COMPENSATION_PROCESS',
-    'LEGAL_OBJECTIONS',
-    'APPROVAL_ACQUISITION',
-    'LAND_HANDOVER',
-    'PROJECT_UTILIZATION'
+    'IDENTIFIED',
+    'VERIFICATION',
+    'PROPOSAL',
+    'NOTICE',
+    'COMPENSATION',
+    'LEGAL',
+    'APPROVAL',
+    'ACQUIRED',
+    'HANDOVER',
+    'UTILIZATION'
   ];
 
   // Function to handle login success & scope default tab based on role
@@ -45,7 +52,7 @@ export default function App() {
     setCurrentUser(userObj);
     setIsAuthenticated(true);
 
-    const roleId = userObj?.roleObj?.id || 'MINISTRY';
+    const roleId = userObj?.roleObj?.id || 'SUPER_ADMIN';
     if (roleId === 'CITIZEN') {
       setActiveTab('citizen');
     } else {
@@ -59,7 +66,7 @@ export default function App() {
     setCurrentUser(null);
   };
 
-  // Function to advance a parcel's acquisition stage through all 9 stages
+  // Function to advance a parcel's acquisition stage through all statutory stages
   const handleAdvanceStage = (parcelId) => {
     setParcels(prevParcels => 
       prevParcels.map(p => {
@@ -85,7 +92,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
-      {/* Navbar with RBAC Scoped Tabs */}
+      {/* Navbar with RBAC Scoped Tabs & Modals */}
       <Navbar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -93,6 +100,9 @@ export default function App() {
         onLogout={handleLogout}
         onOpenAuditLog={() => setIsAuditOpen(true)}
         onOpenProposalModal={() => setIsProposalModalOpen(true)}
+        onOpenDocuments={() => setIsDocumentsOpen(true)}
+        onOpenLegal={() => setIsLegalOpen(true)}
+        onOpenNotifications={() => setIsNotificationsOpen(true)}
       />
 
       {/* Top Single Sleek KPI Metrics Bar */}
@@ -140,6 +150,20 @@ export default function App() {
         isOpen={isProposalModalOpen}
         onClose={() => setIsProposalModalOpen(false)}
         onAddProposal={handleAddProposal}
+      />
+      <DocumentVaultModal
+        isOpen={isDocumentsOpen}
+        onClose={() => setIsDocumentsOpen(false)}
+        parcels={parcels}
+      />
+      <LegalDisputesModal
+        isOpen={isLegalOpen}
+        onClose={() => setIsLegalOpen(false)}
+        parcels={parcels}
+      />
+      <NotificationsModal
+        isOpen={isNotificationsOpen}
+        onClose={() => setIsNotificationsOpen(false)}
       />
     </div>
   );

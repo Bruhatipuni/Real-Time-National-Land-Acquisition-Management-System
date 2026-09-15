@@ -11,7 +11,9 @@ import {
   ChevronDown,
   LogOut,
   User,
-  Shield
+  Bell,
+  Folder,
+  Scale
 } from 'lucide-react';
 import { PRESET_ROLES } from './LoginModal';
 
@@ -21,58 +23,61 @@ export default function Navbar({
   currentUser,
   onLogout,
   onOpenAuditLog,
-  onOpenProposalModal 
+  onOpenProposalModal,
+  onOpenDocuments,
+  onOpenLegal,
+  onOpenNotifications
 }) {
   const roleObj = currentUser?.roleObj || PRESET_ROLES[0];
-  const roleId = roleObj.id || 'MINISTRY';
+  const roleId = roleObj.id || 'SUPER_ADMIN';
   const userName = currentUser?.name || roleObj.user;
 
   // Master Nav Items definitions
   const allNavItems = [
     { 
       id: 'gis', 
-      label: 'Home / GIS Map', 
+      label: 'Land & GIS Map', 
       icon: Map, 
-      roles: ['MINISTRY', 'LAO', 'SURVEYOR', 'AGENCY'] 
+      roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'PROJECT_OFFICER'] 
     },
     { 
       id: 'workflow', 
-      label: 'Land Management', 
+      label: '11-Stage Land Management', 
       icon: GitPullRequest,
-      roles: ['MINISTRY', 'LAO', 'SURVEYOR', 'AGENCY'],
-      dropdown: ['Land Identification', 'Land Verification', 'Acquisition Proposal', 'Notifications & Notices', 'Compensation Process', 'Legal & Objections', 'Approval & Acquisition', 'Land Handover', 'Project Utilization']
+      roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'FINANCE_OFFICER', 'LEGAL_OFFICER', 'PROJECT_OFFICER'],
+      dropdown: ['01. Land Identification', '02. Land Verification', '03. Acquisition Proposal', '04. Notifications & Notices', '05. Compensation Process', '06. Legal & Objections', '07. Approval & Acquisition', '08. Land Acquired', '09. Land Handover', '10. Project Utilization']
     },
     { 
       id: 'citizen', 
       label: 'Citizen & DBT Portal', 
       icon: UserCheck, 
-      roles: ['MINISTRY', 'CITIZEN', 'LAO'] 
+      roles: ['SUPER_ADMIN', 'CITIZEN', 'DISTRICT_OFFICER', 'FINANCE_OFFICER'] 
     },
     { 
       id: 'award', 
-      label: 'Notice & Award', 
+      label: 'Notice & Award Certificate', 
       icon: FileText, 
-      roles: ['MINISTRY', 'LAO', 'CITIZEN'] 
+      roles: ['SUPER_ADMIN', 'DISTRICT_OFFICER', 'FINANCE_OFFICER', 'CITIZEN'] 
     },
     { 
       id: 'analytics', 
       label: 'National Dashboard', 
       icon: BarChart3, 
-      roles: ['MINISTRY', 'LAO', 'AGENCY'] 
+      roles: ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'PROJECT_OFFICER'] 
     }
   ];
 
   // Filter allowed navigation tabs based on logged-in role
-  const navItems = roleId === 'MINISTRY' 
-    ? allNavItems // Full Access Superadmin sees ALL tabs
+  const navItems = roleId === 'SUPER_ADMIN' 
+    ? allNavItems // Superadmin sees ALL tabs
     : allNavItems.filter(item => item.roles.includes(roleId));
 
-  // Determine action permissions
-  const canSubmitProposal = ['MINISTRY', 'LAO', 'AGENCY'].includes(roleId);
-  const canViewLedger = ['MINISTRY', 'LAO', 'SURVEYOR'].includes(roleId);
+  // Action permissions
+  const canSubmitProposal = ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'PROJECT_OFFICER'].includes(roleId);
+  const canViewLedger = ['SUPER_ADMIN', 'STATE_ADMIN', 'DISTRICT_OFFICER', 'LAND_OFFICER', 'LEGAL_OFFICER'].includes(roleId);
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <header className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm font-sans">
       {/* 1. Main Branding Header: BHUSETU + Slogan */}
       <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Left: BHUSETU Title & Slogan */}
@@ -87,11 +92,11 @@ export default function Navbar({
                 BHU<span className="text-amber-600">SETU</span>
               </h1>
               <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
-                roleId === 'MINISTRY' 
+                roleId === 'SUPER_ADMIN' 
                   ? 'bg-purple-100 text-purple-900 border-purple-300 font-mono' 
                   : 'bg-amber-50 text-amber-900 border-amber-300'
               }`}>
-                {roleId === 'MINISTRY' ? 'SUPERADMIN FULL ACCESS' : `${roleObj.badge}`}
+                {roleId === 'SUPER_ADMIN' ? 'SUPERADMIN ACCESS' : `${roleObj.badge || roleId}`}
               </span>
             </div>
             <p className="text-xs font-black text-amber-800 tracking-wide italic">
@@ -100,12 +105,44 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* Right: User Profile & Actions */}
-        <div className="flex items-center space-x-3 shrink-0">
+        {/* Right: Quick Action Shortcuts & User Profile */}
+        <div className="flex items-center space-x-2.5 shrink-0">
+          {/* Document Vault Shortcut */}
+          <button
+            onClick={onOpenDocuments}
+            title="Document Management Vault"
+            className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3 py-2 rounded-xl border border-slate-200 font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+          >
+            <Folder className="w-4 h-4 text-blue-600" />
+            <span className="hidden sm:inline">Documents</span>
+          </button>
+
+          {/* Legal Objections Shortcut */}
+          <button
+            onClick={onOpenLegal}
+            title="Legal & Objection Disputes"
+            className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3 py-2 rounded-xl border border-slate-200 font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+          >
+            <Scale className="w-4 h-4 text-red-600" />
+            <span className="hidden sm:inline">Legal</span>
+          </button>
+
+          {/* Notifications Bell */}
+          <button
+            onClick={onOpenNotifications}
+            title="System Alerts & Notifications"
+            className="relative bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs p-2 rounded-xl border border-amber-200 transition-all cursor-pointer"
+          >
+            <Bell className="w-4 h-4 text-amber-700" />
+            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-pulse">
+              4
+            </span>
+          </button>
+
           {canSubmitProposal && (
             <button
               onClick={onOpenProposalModal}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-lg flex items-center space-x-1.5 transition-all shadow-md shadow-amber-500/20 cursor-pointer"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-extrabold text-xs px-3.5 py-2 rounded-xl flex items-center space-x-1.5 transition-all shadow-md shadow-amber-500/20 cursor-pointer"
             >
               <Plus className="w-4 h-4 text-slate-950" />
               <span>Submit Proposal</span>
@@ -113,8 +150,8 @@ export default function Navbar({
           )}
 
           {/* User Profile Tag */}
-          <div className="bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-xs flex items-center space-x-2">
-            <div className="w-7 h-7 rounded-full bg-slate-900 text-amber-400 font-bold flex items-center justify-center text-[11px]">
+          <div className="bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl text-xs flex items-center space-x-2">
+            <div className="w-7 h-7 rounded-lg bg-slate-900 text-amber-400 font-bold flex items-center justify-center text-[11px]">
               <User className="w-4 h-4" />
             </div>
             <div className="text-left hidden sm:block">
@@ -127,7 +164,7 @@ export default function Navbar({
           <button 
             onClick={onLogout}
             title="Sign Out / Switch Account"
-            className="bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 text-xs p-2 rounded-lg border border-slate-200 transition-colors cursor-pointer"
+            className="bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 text-xs p-2 rounded-xl border border-slate-200 transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -158,7 +195,7 @@ export default function Navbar({
 
                   {/* Dropdown Menu */}
                   {item.dropdown && (
-                    <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-slate-900 border border-slate-800 shadow-2xl rounded-b-lg overflow-hidden z-50">
+                    <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-slate-900 border border-slate-800 shadow-2xl rounded-b-xl overflow-hidden z-50">
                       <div className="bg-amber-500 text-slate-950 font-bold text-xs px-3 py-2 border-b border-amber-600">
                         {item.label} Stages
                       </div>
@@ -178,16 +215,16 @@ export default function Navbar({
             })}
           </nav>
 
-          {/* Ledger Button (Only for authorized roles) */}
+          {/* Ledger Button */}
           {canViewLedger && (
             <div className="hidden lg:flex items-center py-1">
               <button 
                 onClick={onOpenAuditLog}
-                title="Immutable BhuStack Audit Ledger"
-                className="bg-white hover:bg-slate-50 text-slate-800 text-xs px-3 py-1.5 rounded border border-slate-300 font-bold transition-colors cursor-pointer flex items-center space-x-1"
+                title="Immutable Audit Ledger"
+                className="bg-white hover:bg-slate-50 text-slate-800 text-xs px-3 py-1.5 rounded-lg border border-slate-300 font-bold transition-colors cursor-pointer flex items-center space-x-1.5 shadow-xs"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Ledger</span>
+                <span>Audit Ledger</span>
               </button>
             </div>
           )}
