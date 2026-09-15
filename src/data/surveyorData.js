@@ -80,14 +80,20 @@ export const SURVEYOR_ROUTE_PLAN = {
 
 // Nearby GIS contextual layer features around the Sohna-Tauru corridor
 export const NEARBY_GIS_FEATURES = {
+  roads: [
+    { id: 'RD-01', name: 'Delhi-Mumbai Expressway Corridor ROW (70m)', coordinates: [[28.2490, 77.0640], [28.2480, 77.0660], [28.2470, 77.0680]] },
+    { id: 'RD-02', name: 'Sohna Bypass Service Road', coordinates: [[28.2495, 77.0645], [28.2485, 77.0665], [28.2475, 77.0685]] }
+  ],
+  waterBodies: [
+    { id: 'WB-01', name: 'Gurgaon Canal Distributary #4', coordinates: [[28.2500, 77.0630], [28.2488, 77.0655], [28.2465, 77.0675]] }
+  ],
   monuments: [
-    { id: 'MON-01', name: 'Survey of India GTS Bench Mark #HR-89', lat: 28.1510, lng: 76.9240, elevation: '215.8 m' },
-    { id: 'MON-02', name: 'Revenue Boundary Tri-Junction Pillar (Burj)', lat: 28.1480, lng: 76.9330, elevation: '214.2 m' }
+    { id: 'MON-01', name: 'Survey of India GTS Bench Mark #HR-89', lat: 28.2480, lng: 77.0650, elevation: '215.8 m' },
+    { id: 'MON-02', name: 'Revenue Boundary Tri-Junction Pillar (Burj)', lat: 28.2475, lng: 77.0670, elevation: '214.2 m' }
   ],
   infrastructure: [
-    { id: 'INF-01', type: 'HT_LINE', name: '400 kV PowerGrid Double Circuit Line', points: [[28.1550, 76.9220], [28.1510, 76.9290], [28.1450, 76.9380]] },
-    { id: 'INF-02', type: 'GAS_PIPE', name: 'GAIL 24" Natural Gas Pipeline Corridor', points: [[28.1490, 76.9220], [28.1470, 76.9280], [28.1420, 76.9360]] },
-    { id: 'INF-03', type: 'CANAL', name: 'Western Jamuna Feeder Canal Branch', points: [[28.1560, 76.9310], [28.1530, 76.9340], [28.1480, 76.9380]] }
+    { id: 'INF-01', type: 'HT_LINE', name: '400 kV PowerGrid Double Circuit Line', points: [[28.2510, 77.0620], [28.2480, 77.0660], [28.2450, 77.0690]] },
+    { id: 'INF-02', type: 'GAS_PIPE', name: 'GAIL 24" Natural Gas Pipeline Corridor', points: [[28.2490, 77.0630], [28.2470, 77.0665], [28.2440, 77.0695]] }
   ]
 };
 

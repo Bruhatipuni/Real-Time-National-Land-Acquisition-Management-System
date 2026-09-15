@@ -796,7 +796,7 @@ export default function FieldSurveyMode({ parcel, onBack, onUpdateParcel }) {
                 )}
 
                 {/* 5. Expressway Corridor ROW Polyline */}
-                {layers.roads && NEARBY_GIS_FEATURES.roads.map((rd, i) => (
+                {layers.roads && (NEARBY_GIS_FEATURES?.roads || []).map((rd, i) => (
                   <Polyline 
                     key={i}
                     positions={rd.coordinates}
@@ -809,7 +809,7 @@ export default function FieldSurveyMode({ parcel, onBack, onUpdateParcel }) {
                 ))}
 
                 {/* 6. Irrigation Canal */}
-                {layers.waterBodies && NEARBY_GIS_FEATURES.waterBodies.map((wb, i) => (
+                {layers.waterBodies && (NEARBY_GIS_FEATURES?.waterBodies || []).map((wb, i) => (
                   <Polyline 
                     key={i}
                     positions={wb.coordinates}
