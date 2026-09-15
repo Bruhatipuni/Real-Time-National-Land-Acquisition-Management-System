@@ -78,6 +78,32 @@ app.post('/api/compensation/calculate', (req, res) => {
   res.json({ success: true, result: comp });
 });
 
-app.listen(PORT, () => {
-  console.log(`BhuSetu Backend REST API running on http://localhost:${PORT}`);
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static assets from dist folder if available
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
+
+// Fallback route for SPA index.html
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  res.sendFile(path.join(distPath, 'index.html'), (err) => {
+    if (err) {
+      next();
+    }
+  });
 });
+
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`BhuSetu Backend REST API running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
