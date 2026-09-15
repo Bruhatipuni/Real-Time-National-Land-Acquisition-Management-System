@@ -6,6 +6,7 @@ import WorkflowPipeline from './components/WorkflowPipeline';
 import CitizenPortal from './components/CitizenPortal';
 import AwardGenerator from './components/AwardGenerator';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
+import CentralMinistryCommandCenter from './components/CentralMinistryCommandCenter';
 import BhuSathiChatbot from './components/BhuSathiChatbot';
 import AuditLogModal from './components/AuditLogModal';
 import ProposalSubmissionModal from './components/ProposalSubmissionModal';
@@ -55,6 +56,8 @@ export default function App() {
     const roleId = userObj?.roleObj?.id || 'SUPER_ADMIN';
     if (roleId === 'CITIZEN') {
       setActiveTab('citizen');
+    } else if (roleId === 'SUPER_ADMIN') {
+      setActiveTab('analytics');
     } else {
       setActiveTab('gis');
     }
@@ -176,9 +179,48 @@ export default function App() {
         )}
 
         {activeTab === 'analytics' && (
-          <AnalyticsDashboard projects={projects} parcels={parcels} />
+          <CentralMinistryCommandCenter projects={projects} parcels={parcels} />
         )}
       </main>
+
+      {/* Official Government Portal Footer */}
+      <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 text-xs mt-auto">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+            <div>
+              <div className="flex items-center space-x-2">
+                <span className="text-white font-mono font-black text-sm tracking-wide">BHUSETU</span>
+                <span className="text-slate-600">|</span>
+                <span className="text-amber-400 font-medium text-xs">National Land Acquisition & Management System</span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Designed & Developed for Ministry of Rural Development & MoRTH • Government of India
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-400">
+              <span className="hover:text-amber-400 transition-colors cursor-pointer">DILRMP 3.0</span>
+              <span>•</span>
+              <span className="hover:text-amber-400 transition-colors cursor-pointer">PM Gati Shakti NMP</span>
+              <span>•</span>
+              <span className="hover:text-amber-400 transition-colors cursor-pointer">Bhu-Aadhaar (ULPIN)</span>
+              <span>•</span>
+              <span className="hover:text-amber-400 transition-colors cursor-pointer">NIC Cloud Platform</span>
+            </div>
+          </div>
+
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-slate-500 font-mono">
+            <div>
+              © 2026 Ministry of Rural Development & MoRTH. Content owned & maintained by Land Reforms Division.
+            </div>
+            <div className="flex items-center space-x-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+              <span>Gateway: Online (200 OK)</span>
+            </div>
+          </div>
+        </div>
+        <div className="gov-tricolor-bar" />
+      </footer>
 
       {/* Bhu-Sathi AI Chatbot Widget */}
       <BhuSathiChatbot parcels={parcels} />
