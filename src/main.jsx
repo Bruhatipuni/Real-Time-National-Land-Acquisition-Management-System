@@ -6,7 +6,7 @@ import './index.css'
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
   static getDerivedStateFromError(error) {
@@ -15,19 +15,26 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error("ErrorBoundary caught an error:", error, errorInfo);
+    this.setState({ errorInfo });
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: '40px', background: '#0f172a', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyCenter: 'center', textAlign: 'center' }}>
-          <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '32px', maxWidth: '500px', width: '100%' }}>
+        <div style={{ padding: '40px', background: '#0f172a', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+          <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '32px', maxWidth: '700px', width: '100%' }}>
             <h2 style={{ color: '#f59e0b', fontSize: '20px', fontWeight: 'bold', marginBottom: '12px' }}>BhoomiSetu Application Recovered</h2>
-            <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px', fontFamily: 'monospace' }}>
+            <p style={{ color: '#f87171', fontSize: '14px', marginBottom: '12px', fontFamily: 'monospace', fontWeight: 'bold' }}>
               {this.state.error?.toString() || 'A temporary component initialization error occurred.'}
             </p>
+            {this.state.error?.stack && (
+              <pre style={{ background: '#090d16', color: '#cbd5e1', padding: '12px', borderRadius: '8px', fontSize: '11px', textAlign: 'left', overflowX: 'auto', maxHeight: '180px', marginBottom: '16px', border: '1px solid #334155' }}>
+                {this.state.error.stack}
+                {this.state.errorInfo?.componentStack}
+              </pre>
+            )}
             <button 
-              onClick={() => { localStorage.clear(); window.location.reload(); }}
+              onClick={() => { localStorage.clear(); sessionStorage.clear(); window.location.reload(); }}
               style={{ padding: '10px 24px', background: '#f59e0b', color: '#0f172a', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
             >
               Reload BhoomiSetu Platform
