@@ -197,7 +197,7 @@ export default function Navbar({
             <div>
               <div className="flex items-center space-x-2">
                 <h1 className="text-2xl font-black tracking-tight font-mono text-slate-900">
-                  BHU<span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700">SETU</span>
+                  BHOOMI <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700">SETU</span>
                 </h1>
                 <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-md border tracking-wider uppercase font-mono ${
                   roleId === 'SUPER_ADMIN' 

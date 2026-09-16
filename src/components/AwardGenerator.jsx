@@ -18,7 +18,7 @@ export default function AwardGenerator({ parcels, projects }) {
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
-    doc.text("BHOOMISETU - NATIONAL LAND PLATFORM", 105, 18, { align: "center" });
+    doc.text("BHOOMI SETU - NATIONAL LAND PLATFORM", 105, 18, { align: "center" });
     doc.setFontSize(11);
     doc.text('"Your Land, Our Responsibility"', 105, 25, { align: "center" });
     
@@ -107,7 +107,7 @@ export default function AwardGenerator({ parcels, projects }) {
               <Building2 className="w-6 h-6 text-amber-700" />
             </div>
           </div>
-          <h3 className="text-xl font-black text-slate-900 tracking-tight font-mono">BHU<span className="text-amber-600">SETU</span></h3>
+          <h3 className="text-xl font-black text-slate-900 tracking-tight font-mono">BHOOMI <span className="text-amber-600">SETU</span></h3>
           <p className="text-xs font-black text-amber-800 italic">"Your Land, Our Responsibility"</p>
           <div className="inline-block bg-slate-100 border border-slate-300 px-4 py-1 rounded-full text-xs font-mono font-black text-slate-800 mt-2">
             SECTION 3G STATUTORY COMPENSATION AWARD CERTIFICATE

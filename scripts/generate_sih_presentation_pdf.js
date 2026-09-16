@@ -50,7 +50,7 @@ function addHeader(doc, slideNumber, titleText, subtitleText) {
   doc.setTextColor(100, 116, 139);
   doc.setFontSize(7.5);
   doc.setFont('helvetica', 'normal');
-  doc.text("@SIH Idea Submission - BhoomiSetu: National Land Acquisition & Management Platform", 16, pageHeight - 3.5);
+  doc.text("@SIH Idea Submission - Bhoomi Setu: National Land Acquisition & Management Platform", 16, pageHeight - 3.5);
   doc.setFont('helvetica', 'bold');
   doc.text(`Slide ${slideNumber} of 6`, pageWidth - 25, pageHeight - 3.5);
 }
@@ -75,7 +75,7 @@ doc.text("SMART INDIA HACKATHON 2026", 28, 28);
 
 doc.setTextColor(255, 255, 255);
 doc.setFontSize(28);
-doc.text("BhoomiSetu (Bhoomi-Setu)", 28, 41);
+doc.text("Bhoomi Setu", 28, 41);
 
 doc.setFontSize(11.5);
 doc.setTextColor(148, 163, 184);
@@ -98,7 +98,7 @@ const titleFields = [
   { label: "Theme", val: "Smart Governance & Infrastructure Automation (PM Gati Shakti Alignment)" },
   { label: "PS Category", val: "Software (Web, Mobile Responsive & Cadastral GIS Platform)" },
   { label: "Team Name", val: "Registered Team Name on Portal" },
-  { label: "Core Platform", val: "BhoomiSetu - Digital 9-Stage Statutory Land Acquisition & DBT Ledger" },
+  { label: "Core Platform", val: "Bhoomi Setu - Digital 9-Stage Statutory Land Acquisition & DBT Ledger" },
   { label: "Live Interactive Prototype", val: "https://bruhatipuni.github.io/Real-Time-National-Land-Acquisition-Management-System/" }
 ];
 
@@ -125,7 +125,7 @@ titleFields.forEach(f => {
 // SLIDE 2: PROPOSED SOLUTION
 // ==========================================
 doc.addPage();
-addHeader(doc, 2, "IDEA TITLE & PROPOSED SOLUTION", "BhoomiSetu: AI & GIS-Powered National Land Acquisition, Statutory Solatium & DBT Platform");
+addHeader(doc, 2, "IDEA TITLE & PROPOSED SOLUTION", "Bhoomi Setu: AI & GIS-Powered National Land Acquisition, Statutory Solatium & DBT Platform");
 
 // 9-Stage Visual Process Ribbon across the top
 doc.setFillColor(241, 245, 249);
@@ -361,7 +361,7 @@ doc.setFont('helvetica', 'bold');
 doc.setTextColor(255, 255, 255);
 doc.text("POTENTIAL CHALLENGE & RISK", 18, tableY + 6);
 doc.text("IMPACT ON PROJECT", 105, tableY + 6);
-doc.text("BHOOMISETU MITIGATION STRATEGY", 175, tableY + 6);
+doc.text("BHOOMI SETU MITIGATION STRATEGY", 175, tableY + 6);
 
 const riskRows = [
   {
@@ -503,7 +503,7 @@ doc.setFillColor(...cRose);
 doc.rect(212, 53, 62, 5, 'F');
 
 // Bar 2: After
-doc.text("BhoomiSetu: 9 Mos", 182, 67);
+doc.text("Bhoomi Setu: 9 Mos", 182, 67);
 doc.setFillColor(...cAccent);
 doc.rect(212, 63, 16, 5, 'F');
 
@@ -692,7 +692,7 @@ doc.text("• Directly answers national priority: PM Gati Shakti & DILRMP.", 160
 doc.text("• Ready to upload as PDF on the SIH Idea Submission portal.", 160, 174);
 
 // Output file path
-const outputPath = path.resolve('c:/Users/hp/Downloads/Project', 'SIH_2026_BhoomiSetu_Presentation.pdf');
+const outputPath = path.resolve(process.cwd(), 'SIH_2026_BhoomiSetu_Presentation.pdf');
 const pdfBytes = doc.output('arraybuffer');
 fs.writeFileSync(outputPath, Buffer.from(pdfBytes));
 console.log(`Updated SIH 2026 Presentation PDF successfully generated at: ${outputPath}`);

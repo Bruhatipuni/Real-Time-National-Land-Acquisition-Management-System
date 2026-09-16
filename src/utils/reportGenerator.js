@@ -69,7 +69,7 @@ export function generateMinistryPDFReport({
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(16);
   doc.setTextColor(15, 23, 42);
-  doc.text('BHOOMISETU: NATIONAL LAND ACQUISITION SYSTEM', 14, 15);
+  doc.text('BHOOMI SETU: NATIONAL LAND ACQUISITION SYSTEM', 14, 15);
 
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
@@ -168,7 +168,7 @@ export function generateMinistryPDFReport({
   // Footer on bottom of page
   doc.setFontSize(8);
   doc.setTextColor(148, 163, 184);
-  doc.text('Confidential - For Central Ministry Official Use Only | BhoomiSetu National Command Center', 14, 287);
+  doc.text('Confidential - For Central Ministry Official Use Only | Bhoomi Setu National Command Center', 14, 287);
   doc.text(`Page 1 of 1`, pageWidth - 30, 287);
 
   // Bottom Tricolor

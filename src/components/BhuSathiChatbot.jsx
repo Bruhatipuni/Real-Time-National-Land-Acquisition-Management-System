@@ -16,8 +16,8 @@ export default function BhuSathiChatbot({ parcels, selectedParcel, currentUser, 
     {
       sender: 'bot',
       text: isSurveyorMode
-        ? `Namaste Surveyor! I am your AI Field Survey Assistant for BHUSETU DGPS / CORS workbench. Synced with CORS Network Station DL-ROHINI-04. How can I assist with GNSS coordinates, boundary mismatch analysis, route planning, or Form VII-A reporting?`
-        : `Namaste ${activeParcel.ownerName}! I am your AI Bhu-Sathi Assistant for BHOOMISETU. I am currently synched with your parcel Plot ${activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}). How can I assist you with your land acquisition, compensation award, or hearing schedule today?`
+        ? `Namaste Surveyor! I am your AI Field Survey Assistant for Bhoomi Setu DGPS / CORS workbench. Synced with CORS Network Station DL-ROHINI-04. How can I assist with GNSS coordinates, boundary mismatch analysis, route planning, or Form VII-A reporting?`
+        : `Namaste ${activeParcel.ownerName}! I am your AI Bhu-Sathi Assistant for Bhoomi Setu. I am currently synched with your parcel Plot ${activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}). How can I assist you with your land acquisition, compensation award, or hearing schedule today?`
     }
   ]);
 

@@ -440,7 +440,7 @@ export default function FieldSurveyMode({ parcel, onBack, onUpdateParcel }) {
         {syncSuccess && (
           <div className="mt-3 bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-xs text-emerald-950 font-bold flex items-center space-x-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>✓ All 5 local field survey records synchronized with Central BHOOMISETU Ledger.</span>
+            <span>✓ All 5 local field survey records synchronized with Central BHOOMI SETU Ledger.</span>
           </div>
         )}
       </div>

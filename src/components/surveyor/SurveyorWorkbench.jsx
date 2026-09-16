@@ -195,7 +195,7 @@ export default function SurveyorWorkbench({
 
   // Offline Package Download Simulation
   const handleDownloadPackage = () => {
-    alert("Downloading Offline Survey Cache:\n• High-Res Cadastral Maps\n• RoR Jamabandi Records\n• Real-Time Parcel Coordinates\n• Offline BHOOMISETU Ledger DB");
+    alert("Downloading Offline Survey Cache:\n• High-Res Cadastral Maps\n• RoR Jamabandi Records\n• Real-Time Parcel Coordinates\n• Offline BHOOMI SETU Ledger DB");
     setOfflinePackageReady(true);
   };
 

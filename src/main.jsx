@@ -23,7 +23,7 @@ class ErrorBoundary extends React.Component {
       return (
         <div style={{ padding: '40px', background: '#0f172a', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
           <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '32px', maxWidth: '700px', width: '100%' }}>
-            <h2 style={{ color: '#f59e0b', fontSize: '20px', fontWeight: 'bold', marginBottom: '12px' }}>BhoomiSetu Application Recovered</h2>
+            <h2 style={{ color: '#f59e0b', fontSize: '20px', fontWeight: 'bold', marginBottom: '12px' }}>Bhoomi Setu Application Recovered</h2>
             <p style={{ color: '#f87171', fontSize: '14px', marginBottom: '12px', fontFamily: 'monospace', fontWeight: 'bold' }}>
               {this.state.error?.toString() || 'A temporary component initialization error occurred.'}
             </p>
@@ -37,7 +37,7 @@ class ErrorBoundary extends React.Component {
               onClick={() => { localStorage.clear(); sessionStorage.clear(); window.location.reload(); }}
               style={{ padding: '10px 24px', background: '#f59e0b', color: '#0f172a', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
             >
-              Reload BhoomiSetu Platform
+              Reload Bhoomi Setu Platform
             </button>
           </div>
         </div>

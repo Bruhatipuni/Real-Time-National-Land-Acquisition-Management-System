@@ -66,7 +66,7 @@ export default function SurveyReportModal({ isOpen, onClose, parcel, onSubmitApp
                 <div className="text-xs font-bold uppercase tracking-widest text-slate-700">भारत सरकार • Government of India</div>
                 <div className="text-xs font-semibold text-slate-700">Ministry of Rural Development & MoRTH</div>
                 <h2 className="text-lg sm:text-xl font-black font-mono tracking-tight text-slate-950 mt-1">
-                  BHOOMISETU LAND SURVEY & DGPS REPORT
+                  BHOOMI SETU LAND SURVEY & DGPS REPORT
                 </h2>
                 <div className="text-[11px] font-bold text-amber-700">
                   NATIONAL CADASTRA & BOUNDARY VERIFICATION CERTIFICATE

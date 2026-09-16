@@ -83,7 +83,7 @@ export default function LoginModal({ isOpen, onClose, onSelectRole, currentRole 
             </div>
             <div>
               <h3 className="text-base font-black text-white font-mono tracking-tight">
-                BHOOMI-SETU NATIONAL AUTHENTICATION & ROLE GATEWAY
+                BHOOMI SETU NATIONAL AUTHENTICATION & ROLE GATEWAY
               </h3>
               <p className="text-xs text-slate-400">Select a Role Persona to access customized RBAC views & statutory workflows</p>
             </div>

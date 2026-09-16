@@ -81,7 +81,7 @@ export default function AuthScreen({ onLoginSuccess }) {
             <Building2 className="w-8 h-8 text-slate-950" />
           </div>
           <h1 className="text-3xl font-black font-mono tracking-tight text-white">
-            BHOOMI<span className="text-amber-500">SETU</span>
+            BHOOMI <span className="text-amber-500">SETU</span>
           </h1>
           <p className="text-sm font-black text-amber-400 italic">
             "Your Land, Our Responsibility"
@@ -270,7 +270,7 @@ export default function AuthScreen({ onLoginSuccess }) {
               </div>
               <h4 className="text-sm font-bold text-white">Registration Successful!</h4>
               <p className="text-xs text-slate-400">
-                Encrypted RBAC identity generated. Launching BHOOMISETU Platform...
+                Encrypted RBAC identity generated. Launching BHOOMI SETU Platform...
               </p>
             </div>
           )}

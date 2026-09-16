@@ -177,7 +177,7 @@ export default function ApplyLandPapers({ parcel, lang = 'en' }) {
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(15);
       doc.setFont('helvetica', 'bold');
-      doc.text("BHUSETU - GOVERNMENT OF INDIA REVENUE LEDGER", 105, 12, { align: 'center' });
+      doc.text("BHOOMI SETU - GOVERNMENT OF INDIA REVENUE LEDGER", 105, 12, { align: 'center' });
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
@@ -291,7 +291,7 @@ export default function ApplyLandPapers({ parcel, lang = 'en' }) {
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(51, 65, 85);
       const textBlock = 
-        `This is to certify that upon verification of the digitally preserved revenue ledger and GIS cadastral layers on the BhuSetu National Platform, the land parcel bearing ULPIN ${parcel.ulpin}, situated at Village ${parcel.village}, District ${parcel.district}, registered under the ownership of ${parcel.ownerName}, stands duly authenticated under the provisions of the Land Revenue Code and the RFCTLARR Act 2013.\n\n` +
+        `This is to certify that upon verification of the digitally preserved revenue ledger and GIS cadastral layers on the Bhoomi Setu National Platform, the land parcel bearing ULPIN ${parcel.ulpin}, situated at Village ${parcel.village}, District ${parcel.district}, registered under the ownership of ${parcel.ownerName}, stands duly authenticated under the provisions of the Land Revenue Code and the RFCTLARR Act 2013.\n\n` +
         `This electronic record is generated pursuant to Section 65B of the Indian Evidence Act 1872 and is valid for all official, judicial, banking, and statutory compensation purposes without requiring physical ink signature.`;
 
       doc.text(textBlock, 14, 134, { maxWidth: 182, lineHeightFactor: 1.4 });
@@ -313,7 +313,7 @@ export default function ApplyLandPapers({ parcel, lang = 'en' }) {
       doc.text("Signer ID: GOV-HR-DSC-CALA-2026-9901", 20, 189);
       doc.text("Certification Authority: National Informatics Centre (NIC-CA)", 20, 194);
       doc.text("Signature Validity: Cryptographically Verified & Unaltered", 20, 199);
-      doc.text("QR Verification URL: https://bhusetu.gov.in/verify/" + appId, 20, 204);
+      doc.text("QR Verification URL: https://bhoomisetu.gov.in/verify/" + appId, 20, 204);
 
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(15, 23, 42);
@@ -322,9 +322,9 @@ export default function ApplyLandPapers({ parcel, lang = 'en' }) {
       // Footer
       doc.setFontSize(7.5);
       doc.setTextColor(148, 163, 184);
-      doc.text("Official Certified Copy • BhuSetu Land Acquisition Management System • Citizen Service Guarantee Act", 105, 290, { align: 'center' });
+      doc.text("Official Certified Copy • Bhoomi Setu Land Acquisition Management System • Citizen Service Guarantee Act", 105, 290, { align: 'center' });
 
-      doc.save(`BhuSetu_Certified_${parcel.ulpin}_${appId}.pdf`);
+      doc.save(`Bhoomi_Setu_Certified_${parcel.ulpin}_${appId}.pdf`);
     } catch (err) {
       console.error("PDF generation error:", err);
       alert("Error generating certified land paper PDF.");
