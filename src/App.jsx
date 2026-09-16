@@ -9,6 +9,7 @@ import WorkflowPipeline from './components/WorkflowPipeline';
 import CitizenPortal from './components/CitizenPortal';
 import AwardGenerator from './components/AwardGenerator';
 import CentralMinistryCommandCenter from './components/CentralMinistryCommandCenter';
+import SurveyorWorkbench from './components/surveyor/SurveyorWorkbench';
 import BhuSathiChatbot from './components/BhuSathiChatbot';
 import AuditLogModal from './components/AuditLogModal';
 import ProposalSubmissionModal from './components/ProposalSubmissionModal';
@@ -95,6 +96,8 @@ export default function App() {
       setActiveTab('municipal');
     } else if (roleId === 'SUPER_ADMIN') {
       setActiveTab('analytics');
+    } else if (roleId === 'LAND_OFFICER') {
+      setActiveTab('surveyor');
     } else {
       setActiveTab('gis');
     }
@@ -282,6 +285,17 @@ export default function App() {
         {activeTab === 'analytics' && (
           <CentralMinistryCommandCenter projects={projects} parcels={parcels} />
         )}
+
+        {activeTab === 'surveyor' && (
+          <SurveyorWorkbench 
+            parcels={parcels}
+            setParcels={setParcels}
+            projects={projects}
+            selectedParcel={selectedParcel}
+            setSelectedParcel={setSelectedParcel}
+            onAdvanceStage={handleAdvanceStage} 
+          />
+        )}
       </main>
 
       {/* Official Government Portal Footer */}
@@ -327,6 +341,8 @@ export default function App() {
       <BhuSathiChatbot 
         parcels={parcels} 
         selectedParcel={selectedParcel}
+        currentUser={currentUser}
+        activeTab={activeTab}
       />
 
       {/* Modals */}

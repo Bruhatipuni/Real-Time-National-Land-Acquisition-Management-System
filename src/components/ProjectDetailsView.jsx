@@ -559,7 +559,7 @@ export default function ProjectDetailsView({
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
 
             {/* Intermediate Districts */}
-            {project.districts.map((dst, dIdx) => (
+            {(project.districts || []).map((dst, dIdx) => (
               <React.Fragment key={dst}>
                 <div className="flex items-center space-x-1 bg-white border border-slate-200 px-2.5 py-1 rounded-lg text-slate-800 font-mono text-[11px]">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
@@ -1055,7 +1055,7 @@ export default function ProjectDetailsView({
             <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block">
               Contributing Risk Factors:
             </span>
-            {riskAnalysis.factors.map((f, fIdx) => (
+            {(riskAnalysis?.factors || []).map((f, fIdx) => (
               <div key={fIdx} className="flex items-center justify-between bg-slate-50 p-1.5 rounded-lg text-[11px]">
                 <span className="font-medium text-slate-700 truncate max-w-[200px]">{f.detail}</span>
                 <span className="font-mono font-bold text-rose-700 ml-1 shrink-0">{f.weight}</span>

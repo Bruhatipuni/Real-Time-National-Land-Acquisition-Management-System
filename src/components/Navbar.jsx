@@ -17,7 +17,10 @@ import {
   Scale, 
   Users, 
   Clock, 
-  Globe 
+  Globe,
+  Activity,
+  ExternalLink,
+  Crosshair
 } from 'lucide-react';
 import { PRESET_ROLES } from './LoginModal';
 
@@ -67,6 +70,7 @@ export default function Navbar({
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
 
   return (
     <header className="sticky top-0 z-50 shadow-md font-sans">
@@ -258,6 +262,21 @@ export default function Navbar({
               <Compass className={`w-3.5 h-3.5 ${activeTab === 'simulator' ? 'text-slate-950' : 'text-amber-600'}`} />
               <span>Route Simulator</span>
             </button>
+
+            {/* 4. Surveyor Workbench (DGPS / RTK) */}
+            {(roleObj.id === 'LAND_OFFICER' || roleObj.id === 'SUPER_ADMIN' || roleObj.id === 'STATE_ADMIN') && (
+              <button
+                onClick={() => setActiveTab('surveyor')}
+                className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  activeTab === 'surveyor'
+                    ? 'bg-amber-500 text-slate-950 shadow-xs'
+                    : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
+                }`}
+              >
+                <Crosshair className={`w-3.5 h-3.5 ${activeTab === 'surveyor' ? 'text-slate-950' : 'text-amber-600'}`} />
+                <span>Surveyor Workbench</span>
+              </button>
+            )}
 
             {/* 4. Municipal Property Verification - Strictly visible ONLY for Municipal Officer */}
             {isMunicipalOfficer && (

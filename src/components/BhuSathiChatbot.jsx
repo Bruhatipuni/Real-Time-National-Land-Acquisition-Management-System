@@ -3,7 +3,7 @@ import { Bot, X, Send, Sparkles, User, HelpCircle, ArrowRight, ShieldCheck, Comp
 import { formatINR } from '../utils/compensationEngine';
 import { getNextActionDetails } from './citizen/citizenData';
 
-export default function BhuSathiChatbot({ parcels, selectedParcel }) {
+export default function BhuSathiChatbot({ parcels, selectedParcel, currentUser, activeTab }) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
 
@@ -21,20 +21,34 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
     riskLevel: "HIGH"
   };
 
+  const isSurveyorMode = activeTab === 'surveyor' || currentUser?.roleObj?.id === 'LAND_OFFICER';
+
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: `Namaste${activeParcel.ownerName ? ' ' + activeParcel.ownerName : ''}! I am your Bhu-Sathi AI Decision Support Assistant for BHUSETU.\n\nI am currently synced with parcel Plot ${activeParcel.plotNumber || activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}) in ${activeParcel.village || 'Thane'}.\n\nHow can I assist you with parcel status, field demarcation, compensation awards, risk scores, alternative routes, or active disputes today?`
+      text: isSurveyorMode
+        ? `Namaste Surveyor! I am your AI Field Survey Assistant for BHUSETU DGPS / CORS workbench. Synced with CORS Network Station DL-ROHINI-04. How can I assist with GNSS coordinates, boundary mismatch analysis, route planning, or Form VII-A reporting?`
+        : `Namaste${activeParcel.ownerName ? ' ' + activeParcel.ownerName : ''}! I am your Bhu-Sathi AI Decision Support Assistant for BHUSETU.\n\nI am currently synced with parcel Plot ${activeParcel.plotNumber || activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}) in ${activeParcel.village || 'Thane'}.\n\nHow can I assist you with parcel status, field demarcation, compensation awards, risk scores, alternative routes, or active disputes today?`
     }
   ]);
 
-  const quickPrompts = [
+  const citizenQuickPrompts = [
     "What is the status of this parcel?",
     "Why is this parcel high risk?",
+    "Why haven't I received my compensation?",
+    "What happens next for my land?",
     "Which route has the lowest impact?",
-    "What disputes are active in this project?",
     "Show parcels with area mismatch."
   ];
+
+  const surveyorQuickPrompts = [
+    "Which parcels have boundary mismatches?",
+    "Show pending surveys within 5 km",
+    "Generate today's survey report",
+    "Which surveys have deadlines this week?"
+  ];
+
+  const quickPrompts = isSurveyorMode ? surveyorQuickPrompts : citizenQuickPrompts;
 
   const handleSend = (textToSend) => {
     const queryText = (typeof textToSend === 'string' ? textToSend : input).trim();
@@ -49,7 +63,38 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
     setTimeout(() => {
       let botReply = "";
 
-      if (query.includes('status of this parcel') || query.includes('parcel status')) {
+      // Surveyor-specific queries
+      if (isSurveyorMode && (query.includes('boundary') || query.includes('mismatch') || query.includes('deviation') || query.includes('encroach') || query.includes('tolerance'))) {
+        botReply = `🛰️ Boundary & Area Mismatch Intelligence (Statutory Tolerance: ±1.5%):\n\n` +
+          `• LND-00125 (Plot 142/3, Sohna Rural • Rameshwar Singh Yadav): Measured 4.47 Ha vs 4.50 Ha (-0.67% deviation) - Within statutory tolerance.\n` +
+          `• LND-00126 (Plot 142/4, Sohna Rural • Sunita Devi & Harish Yadav): Measured 3.10 Ha vs 3.20 Ha (-3.12% deviation) - Western Canal boundary encroachment (Points P3-P4 overlap).\n` +
+          `• LND-00127 (Plot 112/1, Taurupath • Gurdeep Singh Sandhu): Measured 3.10 Ha vs 3.10 Ha (0.00% deviation) - Physical boundary verified; title under High Court Case CASE-102 stay.\n` +
+          `• LND-00128 (Plot 88/C, Taurupath • Devendra Prakash Sharma): Measured 1.23 Ha vs 1.20 Ha (+2.50% deviation) - Northern orchard multipath GNSS interference; re-survey scheduled.\n` +
+          `• LND-00129 & LND-00130: Fully aligned with revenue Khatauni records (0.00% to -0.48%).`;
+      }
+      else if (isSurveyorMode && (query.includes('5 km') || query.includes('route') || query.includes('nearby') || query.includes('pending survey') || query.includes('plan'))) {
+        botReply = `📍 Optimized Field Survey Route Plan (Delhi-Mumbai Expressway Spur):\n\n` +
+          `• Hub: Tehsildar & Survey Field Office, Sohna (28.1500° N, 76.9200° E)\n` +
+          `• Active Section: Sohna Rural & Taurupath corridor (KM 38.2 to 44.8)\n` +
+          `• Waypoint Sequence: Sohna Field Office → LND-00125 (Plot 142/3, Rameshwar Singh) → LND-00126 (Plot 142/4, Sunita Devi) → LND-00130 (Plot 12/4, Rakesh Bishnoi) → LND-00127 (Plot 112/1, Gurdeep Sandhu) → LND-00128 (Plot 88/C, Devendra Sharma) → LND-00129 (Plot 90/A, Mahesh Saini) → Return to Sohna Base\n` +
+          `• Total Route Distance: 28.6 km | Est. Travel & Survey Time: 4 hrs 45 mins\n\n` +
+          `Click "Optimize Field Route" on the Surveyor Workbench header to open the interactive map and export GPX waypoints.`;
+      }
+      else if (isSurveyorMode && (query.includes('report') || query.includes('form vii') || query.includes('generate') || query.includes('certificate'))) {
+        botReply = `📄 Form VII-A Statutory Land Survey & Demarcation Certificate:\n\n` +
+          `• Format: Prescribed Government of India statutory field survey certificate.\n` +
+          `• Includes: 14-digit ULPIN Bhu-Aadhaar, WGS-84 UTM Zone 43N coordinates table, RTK fix accuracies (±1.8m), variance computation, geo-tagged watermarked evidence photos, and owner Aadhaar verification.\n` +
+          `• Signature: Surveyor Digital Signature + CALA Land Officer Counter-signature with QR verification code.\n\n` +
+          `Click "Preview Official Survey Report" on any parcel in the workbench to view and print the statutory PDF.`;
+      }
+      else if (isSurveyorMode && (query.includes('deadline') || query.includes('week') || query.includes('urgent') || query.includes('today'))) {
+        botReply = `⏰ High Priority Survey Deadlines:\n\n` +
+          `1. LND-00125 (Plot 142/3, Sohna Rural • Rameshwar Singh Yadav): DEADLINE TODAY 17:00 IST (Critical Path Interchange Corridor)\n` +
+          `2. LND-00126 (Plot 142/4, Sohna Rural • Sunita Devi & Harish Yadav): DEADLINE 16 SEP 2026 12:00 IST (Encroachment Demarcation)\n` +
+          `3. LND-00128 (Plot 88/C, Taurupath • Devendra Prakash Sharma): DEADLINE 18 SEP 2026 18:00 IST (Total Station Re-Survey)\n\n` +
+          `Recommended: Open "My Assigned Parcels", filter by "High Priority" or "Today", and tap "START SURVEY".`;
+      }
+      else if (query.includes('status of this parcel') || query.includes('parcel status')) {
         botReply = `📌 Status for Plot ${activeParcel.plotNumber || activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}):\n\n` +
           `• Registered Owner: ${activeParcel.landowner || activeParcel.ownerName}\n` +
           `• Survey Status: ${activeParcel.surveyStatus || 'Survey Done → Handed to LAO'}\n` +
@@ -57,6 +102,27 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
           `• GIS Demarcation: ${activeParcel.gisDemarcation || 'Demarcated (4 Coordinates)'}\n` +
           `• Verification Score: ${activeParcel.verificationScore || 100}%\n` +
           `• Expected Action: ${activeParcel.expectedNextAction || 'LAO Section 3G Solatium Award determination'}`;
+      }
+      // Citizen & general queries
+      else if (query.includes('compensation') || query.includes('why haven') || query.includes('payment') || query.includes('dbt') || query.includes('money')) {
+        const dbtMsg = activeParcel.dbtStatus === 'DISBURSED_100'
+          ? `✓ 100% Funds Credited via Direct Benefit Transfer (DBT) to ${activeParcel.bankName} (Ref: ${activeParcel.dbtTransactionId || "DBT2026091299841"}) on ${activeParcel.dbtDate || "08 Sep 2026"}.`
+          : `⏳ Payment is in Bank Verification / Escrow Queue under PFMS. Next step is finance disbursement approval.`;
+
+        botReply = `I checked your land record for Plot ${activeParcel.surveyNo} (ULPIN: ${activeParcel.ulpin}):\n\n` +
+          `• Registered Owner: ${activeParcel.ownerName}\n` +
+          `• Total Award Amount: ${formatINR(activeParcel.totalAwardAmount)}\n` +
+          `• Statutory Status: ${activeParcel.status.replace(/_/g, ' ')}\n` +
+          `• Payout Status: ${dbtMsg}\n\n` +
+          `You can view line-by-line breakdown in the "Compensation & DBT" tab or file a grievance if you notice any delay.`;
+      } 
+      else if (query.includes('next') || query.includes('what happens') || query.includes('stage') || query.includes('step')) {
+        botReply = `Here is what happens next for your land (Plot ${activeParcel.surveyNo}):\n\n` +
+          `• Current Stage: ${nextAction.stageTitle}\n` +
+          `• Immediate Next Action: ${nextAction.nextAction}\n` +
+          `• Responsible Authority: ${nextAction.responsibleAuthority}\n` +
+          `• Estimated Timeline: ${nextAction.timeline}\n\n` +
+          `You can track the complete 9-stage journey under the "Acquisition Journey" tab.`;
       }
       else if (query.includes('high risk') || query.includes('why is this parcel') || query.includes('risk score') || query.includes('risk')) {
         botReply = `⚠️ Risk Analysis for Plot ${activeParcel.plotNumber || activeParcel.surveyNo} (Score: ${activeParcel.riskScore || 78}/100 - ${activeParcel.riskLevel || 'HIGH'}):\n\n` +
@@ -98,13 +164,15 @@ export default function BhuSathiChatbot({ parcels, selectedParcel }) {
           `• Disbursal Mode: Direct Benefit Transfer (DBT) to authenticated bank account via PFMS.`;
       }
       else {
-        botReply = `Under the BhuSetu National Land Acquisition & Management Platform, I can assist with:\n\n` +
-          `• Parcel ULPIN lookup and boundary verification status\n` +
-          `• AI Risk prioritization and mismatch detection\n` +
-          `• Pre-acquisition Route Simulator MCDA scoring\n` +
-          `• Person-to-person land disputes (LD-1042, LD-1043, LD-1044)\n` +
-          `• RFCTLARR 2013 solatium and R&R entitlement tracking.\n\n` +
-          `What would you like to examine next?`;
+        botReply = isSurveyorMode
+          ? `As your DGPS / RTK Field Survey Assistant, I can help analyze boundary deviations, calculate parcel acreage, format coordinate tables, or provide dispute resolution protocols under Survey of India DILRMP guidelines. How can I help?`
+          : `Under the BhuSetu National Land Acquisition & Management Platform, I can assist with:\n\n` +
+            `• Parcel ULPIN lookup and boundary verification status\n` +
+            `• AI Risk prioritization and mismatch detection\n` +
+            `• Pre-acquisition Route Simulator MCDA scoring\n` +
+            `• Person-to-person land disputes (LD-1042, LD-1043, LD-1044)\n` +
+            `• RFCTLARR 2013 solatium and R&R entitlement tracking.\n\n` +
+            `What would you like to examine next?`;
       }
 
       setMessages(prev => [...prev, { sender: 'bot', text: botReply }]);
