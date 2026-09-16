@@ -20,7 +20,7 @@ export default function AuthScreen({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [selectedRoleId, setSelectedRoleId] = useState('MINISTRY');
+  const [selectedRoleId, setSelectedRoleId] = useState('SUPER_ADMIN');
   const [department, setDepartment] = useState('');
   const [regSuccess, setRegSuccess] = useState(false);
 

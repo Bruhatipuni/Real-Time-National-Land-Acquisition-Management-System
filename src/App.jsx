@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HeaderStats from './components/HeaderStats';
 import GISMapView from './components/GISMapView';
+import FieldSurveyStudio from './components/FieldSurveyStudio';
+import LandDisputeRadar from './components/LandDisputeRadar';
+import RouteSimulator from './components/RouteSimulator';
 import WorkflowPipeline from './components/WorkflowPipeline';
 import CitizenPortal from './components/CitizenPortal';
 import AwardGenerator from './components/AwardGenerator';
-import AnalyticsDashboard from './components/AnalyticsDashboard';
 import CentralMinistryCommandCenter from './components/CentralMinistryCommandCenter';
 import SurveyorWorkbench from './components/surveyor/SurveyorWorkbench';
 import BhuSathiChatbot from './components/BhuSathiChatbot';
@@ -14,18 +16,50 @@ import ProposalSubmissionModal from './components/ProposalSubmissionModal';
 import DocumentVaultModal from './components/DocumentVaultModal';
 import LegalDisputesModal from './components/LegalDisputesModal';
 import NotificationsModal from './components/NotificationsModal';
+import MunicipalOfficerDashboard from './components/MunicipalOfficerDashboard';
+import RnRFamiliesModal from './components/RnRFamiliesModal';
 import AuthScreen from './components/AuthScreen';
-import { PROJECTS_DATA, PARCELS_DATA } from './data/mockData';
+import { PROJECTS_DATA } from './data/mockData';
+import { NATIONAL_PROJECTS, NATIONAL_PARCELS } from './data/nationalHierarchyData';
+
+const DEFAULT_SURVEYOR_USER = {
+  name: 'Anish Kumar (Senior Surveyor)',
+  email: 'surveyor@bhusetu.gov.in',
+  roleObj: {
+    id: 'LAND_OFFICER',
+    title: 'Field Surveyor & GIS Nodal',
+    user: 'Anish Kumar (Senior Surveyor)',
+    badge: 'FIELD INSPECTOR',
+    department: 'Survey & Land Revenue Nodal'
+  }
+};
 
 export default function App() {
-  // Authentication & RBAC state
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  // Authentication & RBAC state (Defaulted to Field Surveyor & GIS Nodal as requested)
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [currentUser, setCurrentUser] = useState(DEFAULT_SURVEYOR_USER);
 
+  // Active Main Navigation Tab ('gis' | 'survey' | 'disputes' | 'simulator' | 'workflow' | 'citizen' | 'award' | 'analytics')
   const [activeTab, setActiveTab] = useState('gis');
-  const [projects, setProjects] = useState(PROJECTS_DATA);
-  const [parcels, setParcels] = useState(PARCELS_DATA);
-  const [selectedParcel, setSelectedParcel] = useState(PARCELS_DATA[0]);
+
+  // Enforce Role-Based Access: 'municipal' tab is exclusively accessible by MUNICIPAL_OFFICER
+  useEffect(() => {
+    const roleId = currentUser?.roleObj?.id || 'LAND_OFFICER';
+    if (activeTab === 'municipal' && roleId !== 'MUNICIPAL_OFFICER') {
+      if (roleId === 'CITIZEN') {
+        setActiveTab('citizen');
+      } else if (roleId === 'SUPER_ADMIN') {
+        setActiveTab('analytics');
+      } else {
+        setActiveTab('gis');
+      }
+    }
+  }, [currentUser, activeTab]);
+
+  // National Projects and Parcels
+  const [projects, setProjects] = useState(NATIONAL_PROJECTS);
+  const [parcels, setParcels] = useState(NATIONAL_PARCELS);
+  const [selectedParcel, setSelectedParcel] = useState(NATIONAL_PARCELS[0]);
   
   // Modals
   const [isAuditOpen, setIsAuditOpen] = useState(false);
@@ -33,6 +67,7 @@ export default function App() {
   const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
   const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isRnROpen, setIsRnROpen] = useState(false);
   const [targetStageFilter, setTargetStageFilter] = useState('ALL');
 
   // Stage sequence order for 10 Statutory Land Management stages
@@ -54,9 +89,11 @@ export default function App() {
     setCurrentUser(userObj);
     setIsAuthenticated(true);
 
-    const roleId = userObj?.roleObj?.id || 'SUPER_ADMIN';
+    const roleId = userObj?.roleObj?.id || 'LAND_OFFICER';
     if (roleId === 'CITIZEN') {
       setActiveTab('citizen');
+    } else if (roleId === 'MUNICIPAL_OFFICER') {
+      setActiveTab('municipal');
     } else if (roleId === 'SUPER_ADMIN') {
       setActiveTab('analytics');
     } else if (roleId === 'LAND_OFFICER') {
@@ -86,9 +123,9 @@ export default function App() {
     UTILIZATION: { title: "Project Utilization", action: "Monitor post-acquisition corridor construction & quarterly drone inspection" }
   };
 
-  // Function to advance a parcel's acquisition stage through all statutory stages
+  // Function to advance a parcel's acquisition stage
   const handleAdvanceStage = (parcelId) => {
-    const userRoleId = currentUser?.roleObj?.id || 'SUPER_ADMIN';
+    const userRoleId = currentUser?.roleObj?.id || 'LAND_OFFICER';
     if (userRoleId === 'CITIZEN') {
       alert("Role-Based Access Control (RBAC): Only authorized Government Officers can advance statutory acquisition stages.");
       return;
@@ -96,28 +133,17 @@ export default function App() {
 
     setParcels(prevParcels => 
       prevParcels.map(p => {
-        if (p.id === parcelId || p.landId === parcelId) {
+        if (p.id === parcelId || p.landId === parcelId || p.ulpin === parcelId) {
           const currentIndex = STAGE_ORDER.indexOf(p.status);
           const nextIndex = currentIndex < STAGE_ORDER.length - 1 ? currentIndex + 1 : currentIndex;
           const nextStageId = STAGE_ORDER[nextIndex];
           const meta = STAGE_META[nextStageId] || { title: nextStageId, action: "Proceed to next statutory milestone" };
 
-          // Update approval stepper state
-          const updatedApprovals = (p.approvals || []).map((app, idx) => {
-            if (idx <= nextIndex / 2) {
-              return { ...app, status: 'COMPLETED' };
-            } else if (idx === Math.ceil(nextIndex / 2)) {
-              return { ...app, status: 'PENDING' };
-            }
-            return { ...app, status: 'NOT_STARTED' };
-          });
-
           return { 
             ...p, 
             status: nextStageId,
             acquisitionStatus: meta.title,
-            expectedNextAction: meta.action,
-            approvals: updatedApprovals
+            expectedNextAction: meta.action
           };
         }
         return p;
@@ -125,19 +151,43 @@ export default function App() {
     );
   };
 
-  // Add new proposal dynamically
+  // Update parcel coordinates & ground assets from Interactive Polygon Node Editor
+  const handleSaveCoordinates = (parcelId, newNodes, groundAssets, status) => {
+    setParcels(prev => prev.map(p => {
+      if (p.id === parcelId || p.landId === parcelId || p.ulpin === parcelId) {
+        return {
+          ...p,
+          coordinates: newNodes,
+          groundAssets: groundAssets || p.groundAssets,
+          surveyStatus: status || p.surveyStatus
+        };
+      }
+      return p;
+    }));
+
+    if (selectedParcel && (selectedParcel.id === parcelId || selectedParcel.ulpin === parcelId)) {
+      setSelectedParcel(prev => ({
+        ...prev,
+        coordinates: newNodes,
+        groundAssets: groundAssets || prev.groundAssets,
+        surveyStatus: status || prev.surveyStatus
+      }));
+    }
+  };
+
+  // Function to add new proposal
   const handleAddProposal = (newProject) => {
     setProjects(prev => [newProject, ...prev]);
   };
 
-  // If not authenticated, render the dedicated Login / Registration screen first
+  // If not authenticated, render Login screen
   if (!isAuthenticated) {
     return <AuthScreen onLoginSuccess={handleLoginSuccess} />;
   }
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
-      {/* Navbar with RBAC Scoped Tabs & Modals */}
+      {/* Sovereign Header + Officer Profile + Nav Bar */}
       <Navbar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -148,22 +198,59 @@ export default function App() {
         onOpenDocuments={() => setIsDocumentsOpen(true)}
         onOpenLegal={() => setIsLegalOpen(true)}
         onOpenNotifications={() => setIsNotificationsOpen(true)}
+        onOpenRnRFamilies={() => setIsRnROpen(true)}
       />
 
-      {/* Top Single Sleek KPI Metrics Bar */}
-      <HeaderStats projects={projects} />
-
-      {/* Main Tab Content */}
+      {/* Main Content Area */}
       <main className="flex-1 pb-12 mt-1">
+        {/* TAB 1: HOME / GIS MAP */}
         {activeTab === 'gis' && (
           <GISMapView 
             projects={projects} 
             parcels={parcels} 
             selectedParcel={selectedParcel} 
-            setSelectedParcel={setSelectedParcel} 
+            setSelectedParcel={setSelectedParcel}
+            onNavigateToSimulator={() => setActiveTab('simulator')}
+            onNavigateToDisputes={() => setActiveTab('disputes')}
+            onLogAudit={(log) => console.log('BhuStack Audit:', log)}
           />
         )}
 
+        {/* TAB 2: FIELD SURVEY & DEMARCATION STUDIO */}
+        {activeTab === 'survey' && (
+          <FieldSurveyStudio
+            parcels={parcels}
+            selectedParcel={selectedParcel}
+            setSelectedParcel={setSelectedParcel}
+            onSaveCoordinates={handleSaveCoordinates}
+            onNavigateToDisputes={() => setActiveTab('disputes')}
+            onLogAudit={(log) => console.log('BhuStack Audit:', log)}
+          />
+        )}
+
+        {/* TAB 3: PERSON-TO-PERSON LAND DISPUTE RADAR */}
+        {activeTab === 'disputes' && (
+          <LandDisputeRadar
+            onSelectParcelForInspection={(plot) => {
+              const matched = parcels.find(p => (p.plotNumber || p.surveyNo) === plot);
+              if (matched) setSelectedParcel(matched);
+              setActiveTab('gis');
+            }}
+          />
+        )}
+
+        {/* TAB 4: PRE-ACQUISITION ALTERNATIVE ROUTE SIMULATOR */}
+        {activeTab === 'simulator' && (
+          <RouteSimulator
+            onInspectParcel={(parcelId) => {
+              const matched = parcels.find(p => p.id === parcelId || p.ulpin === parcelId);
+              if (matched) setSelectedParcel(matched);
+              setActiveTab('gis');
+            }}
+          />
+        )}
+
+        {/* TAB 5: STATUTORY 10-STAGE WORKFLOW PIPELINE */}
         {activeTab === 'workflow' && (
           <WorkflowPipeline 
             projects={projects} 
@@ -173,6 +260,7 @@ export default function App() {
           />
         )}
 
+        {/* TAB 6: CITIZEN PORTAL */}
         {activeTab === 'citizen' && (
           <CitizenPortal 
             parcels={parcels} 
@@ -181,10 +269,19 @@ export default function App() {
           />
         )}
 
+        {/* TAB: MUNICIPAL OFFICER PROPERTY VERIFICATION (Strictly restricted to Municipal Officer) */}
+        {activeTab === 'municipal' && currentUser?.roleObj?.id === 'MUNICIPAL_OFFICER' && (
+          <MunicipalOfficerDashboard 
+            currentUser={currentUser}
+          />
+        )}
+
+        {/* TAB 7: AWARD CERTIFICATE GENERATOR */}
         {activeTab === 'award' && (
           <AwardGenerator parcels={parcels} projects={projects} />
         )}
 
+        {/* TAB 8: NATIONAL COMMAND CENTER */}
         {activeTab === 'analytics' && (
           <CentralMinistryCommandCenter projects={projects} parcels={parcels} />
         )}
@@ -209,7 +306,7 @@ export default function App() {
               <div className="flex items-center space-x-2">
                 <span className="text-white font-mono font-black text-sm tracking-wide">BHOOMI <span className="text-amber-500">SETU</span></span>
                 <span className="text-slate-600">|</span>
-                <span className="text-amber-400 font-medium text-xs">National Land Acquisition & Management System</span>
+                <span className="text-amber-400 font-medium text-xs">National Land Acquisition & Management Platform</span>
               </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
                 Designed & Developed for Ministry of Rural Development & MoRTH • Government of India
@@ -223,24 +320,24 @@ export default function App() {
               <span>•</span>
               <span className="hover:text-amber-400 transition-colors cursor-pointer">Bhu-Aadhaar (ULPIN)</span>
               <span>•</span>
-              <span className="hover:text-amber-400 transition-colors cursor-pointer">NIC Cloud Platform</span>
+              <span className="hover:text-amber-400 transition-colors cursor-pointer">NIC Sovereign Cloud</span>
             </div>
           </div>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-slate-500 font-mono">
             <div>
-              © 2026 Ministry of Rural Development & MoRTH. Content owned & maintained by Land Reforms Division.
+              © 2026 Ministry of Rural Development & MoRTH. Smart India Hackathon (SIH 2026 Problem Statement ID: 26016).
             </div>
             <div className="flex items-center space-x-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-              <span>Gateway: Online (200 OK)</span>
+              <span>Role: {currentUser?.roleObj?.title || 'Field Surveyor & GIS Nodal'} (Online)</span>
             </div>
           </div>
         </div>
         <div className="gov-tricolor-bar" />
       </footer>
 
-      {/* Bhu-Sathi AI Chatbot Widget */}
+      {/* Floating Bhu-Sathi AI Decision Support Assistant */}
       <BhuSathiChatbot 
         parcels={parcels} 
         selectedParcel={selectedParcel}
@@ -250,6 +347,7 @@ export default function App() {
 
       {/* Modals */}
       <AuditLogModal isOpen={isAuditOpen} onClose={() => setIsAuditOpen(false)} />
+      <RnRFamiliesModal isOpen={isRnROpen} onClose={() => setIsRnROpen(false)} projects={projects} />
       <ProposalSubmissionModal
         isOpen={isProposalModalOpen}
         onClose={() => setIsProposalModalOpen(false)}
