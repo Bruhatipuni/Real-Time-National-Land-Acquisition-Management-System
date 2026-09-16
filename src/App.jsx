@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HeaderStats from './components/HeaderStats';
 import GISMapView from './components/GISMapView';
@@ -40,6 +40,20 @@ export default function App() {
 
   // Active Main Navigation Tab ('gis' | 'survey' | 'disputes' | 'simulator' | 'workflow' | 'citizen' | 'award' | 'analytics')
   const [activeTab, setActiveTab] = useState('gis');
+
+  // Enforce Role-Based Access: 'municipal' tab is exclusively accessible by MUNICIPAL_OFFICER
+  useEffect(() => {
+    const roleId = currentUser?.roleObj?.id || 'LAND_OFFICER';
+    if (activeTab === 'municipal' && roleId !== 'MUNICIPAL_OFFICER') {
+      if (roleId === 'CITIZEN') {
+        setActiveTab('citizen');
+      } else if (roleId === 'SUPER_ADMIN') {
+        setActiveTab('analytics');
+      } else {
+        setActiveTab('gis');
+      }
+    }
+  }, [currentUser, activeTab]);
 
   // National Projects and Parcels
   const [projects, setProjects] = useState(NATIONAL_PROJECTS);
@@ -252,8 +266,8 @@ export default function App() {
           />
         )}
 
-        {/* TAB: MUNICIPAL OFFICER PROPERTY VERIFICATION */}
-        {activeTab === 'municipal' && (
+        {/* TAB: MUNICIPAL OFFICER PROPERTY VERIFICATION (Strictly restricted to Municipal Officer) */}
+        {activeTab === 'municipal' && currentUser?.roleObj?.id === 'MUNICIPAL_OFFICER' && (
           <MunicipalOfficerDashboard 
             currentUser={currentUser}
           />
@@ -302,7 +316,7 @@ export default function App() {
             </div>
             <div className="flex items-center space-x-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-              <span>Role: Field Surveyor &amp; GIS Nodal (Online)</span>
+              <span>Role: {currentUser?.roleObj?.title || 'Field Surveyor & GIS Nodal'} (Online)</span>
             </div>
           </div>
         </div>

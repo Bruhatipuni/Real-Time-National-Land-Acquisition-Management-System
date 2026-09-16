@@ -52,35 +52,7 @@ export const MUNICIPAL_PROPERTIES_DATA = [
       noIllegalEncroachment: true,
       taxNocCleared: true
     },
-    photos: [
-      {
-        id: "PHT-81-1",
-        title: "Front Elevation & RoW Setback Buffer",
-        tag: "Setback Compliance",
-        url: "https://images.unsplash.com/photo-1541888946425-d0fbb18615f3?auto=format&fit=crop&w=800&q=80",
-        timestamp: "12 Sep 2026, 11:30 AM",
-        geotag: "28.4595° N, 77.0266° E",
-        notes: "4.5m front setback verified with laser tape."
-      },
-      {
-        id: "PHT-81-2",
-        title: "Municipal Boundary Pillar Peg #03",
-        tag: "Cadastral Boundary",
-        url: "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=800&q=80",
-        timestamp: "12 Sep 2026, 11:45 AM",
-        geotag: "28.4598° N, 77.0270° E",
-        notes: "ULPIN benchmark monument firmly intact."
-      },
-      {
-        id: "PHT-81-3",
-        title: "Structure Side Access Lane Inspection",
-        tag: "Structural Integrity",
-        url: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80",
-        timestamp: "12 Sep 2026, 12:05 PM",
-        geotag: "28.4594° N, 77.0264° E",
-        notes: "Clear 3.2m side passage without unauthorized temporary shed."
-      }
-    ]
+    photos: []
   },
   {
     propertyId: "PROP-MCG-2026-094",
@@ -126,26 +98,7 @@ export const MUNICIPAL_PROPERTIES_DATA = [
       noIllegalEncroachment: false,
       taxNocCleared: false
     },
-    photos: [
-      {
-        id: "PHT-94-1",
-        title: "Rear Balcony Cantilever Overhang",
-        tag: "Setback Inspection",
-        url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
-        timestamp: "14 Sep 2026, 03:20 PM",
-        geotag: "28.4612° N, 77.0310° E",
-        notes: "Projection over municipal utility corridor setback."
-      },
-      {
-        id: "PHT-94-2",
-        title: "Front Gate & Boundary Wall Peg",
-        tag: "Boundary Check",
-        url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
-        timestamp: "14 Sep 2026, 03:35 PM",
-        geotag: "28.4610° N, 77.0308° E",
-        notes: "Front boundary matches approved village killa line."
-      }
-    ]
+    photos: []
   },
   {
     propertyId: "PROP-NDMC-2026-102",
@@ -197,26 +150,7 @@ export const MUNICIPAL_PROPERTIES_DATA = [
       noIllegalEncroachment: false,
       taxNocCleared: false
     },
-    photos: [
-      {
-        id: "PHT-102-1",
-        title: "Unauthorized Container Dock Encroachment",
-        tag: "Encroachment Violation",
-        url: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
-        timestamp: "10 Sep 2026, 10:45 AM",
-        geotag: "28.5120° N, 77.3000° E",
-        notes: "Heavy container loading dock blocking corridor RoW."
-      },
-      {
-        id: "PHT-102-2",
-        title: "Road Buffer Obstruction Peg Measurement",
-        tag: "Setback Violation",
-        url: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80",
-        timestamp: "10 Sep 2026, 11:15 AM",
-        geotag: "28.5124° N, 77.3004° E",
-        notes: "Encroachment exceeds 8.4m into masterplan boundary."
-      }
-    ]
+    photos: []
   },
   {
     propertyId: "PROP-SMC-2026-118",
@@ -262,26 +196,7 @@ export const MUNICIPAL_PROPERTIES_DATA = [
       noIllegalEncroachment: true,
       taxNocCleared: true
     },
-    photos: [
-      {
-        id: "PHT-118-1",
-        title: "Industrial Facility Perimeter & Setback",
-        tag: "Setback Compliance",
-        url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
-        timestamp: "11 Sep 2026, 09:40 AM",
-        geotag: "21.1702° N, 72.8311° E",
-        notes: "9.0m statutory industrial front setback verified."
-      },
-      {
-        id: "PHT-118-2",
-        title: "Cadastral Geo-Corner Marker Pillar",
-        tag: "Cadastral Boundary",
-        url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80",
-        timestamp: "11 Sep 2026, 10:15 AM",
-        geotag: "21.1708° N, 72.8315° E",
-        notes: "GPS benchmark monument coordinates verified."
-      }
-    ]
+    photos: []
   },
   {
     propertyId: "PROP-VUDA-2026-145",
@@ -327,17 +242,7 @@ export const MUNICIPAL_PROPERTIES_DATA = [
       noIllegalEncroachment: true,
       taxNocCleared: true
     },
-    photos: [
-      {
-        id: "PHT-145-1",
-        title: "Commercial Complex Northern Facade",
-        tag: "Drainage Easement",
-        url: "https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=800&q=80",
-        timestamp: "15 Sep 2026, 09:15 AM",
-        geotag: "22.3072° N, 73.1812° E",
-        notes: "Stormwater drain line running parallel to boundary."
-      }
-    ]
+    photos: []
   },
   {
     propertyId: "PROP-BMC-2026-172",
@@ -383,17 +288,7 @@ export const MUNICIPAL_PROPERTIES_DATA = [
       noIllegalEncroachment: true,
       taxNocCleared: true
     },
-    photos: [
-      {
-        id: "PHT-172-1",
-        title: "Service Depot Frontage & Egress",
-        tag: "Setback Compliance",
-        url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
-        timestamp: "13 Sep 2026, 02:20 PM",
-        geotag: "28.0229° N, 73.3119° E",
-        notes: "Front setback clears 60m highway right-of-way."
-      }
-    ]
+    photos: []
   }
 ];
 

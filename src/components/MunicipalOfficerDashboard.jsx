@@ -31,8 +31,12 @@ import {
   Award
 } from 'lucide-react';
 import { MUNICIPAL_PROPERTIES_DATA, MUNICIPAL_STATS } from '../data/municipalPropertiesData';
+import LAODocumentManagement from './LAODocumentManagement';
 
 export default function MunicipalOfficerDashboard({ currentUser }) {
+  // Sub-module navigation state: 'verification' (Property Verification Queue) | 'documents' (LAO Document Management)
+  const [activeSubModule, setActiveSubModule] = useState('verification');
+
   // Local state for properties to support live interactive updates
   const [properties, setProperties] = useState(MUNICIPAL_PROPERTIES_DATA);
   const [selectedPropertyId, setSelectedPropertyId] = useState(MUNICIPAL_PROPERTIES_DATA[0]?.propertyId);
@@ -56,6 +60,16 @@ export default function MunicipalOfficerDashboard({ currentUser }) {
 
   // Digital Certificate Modal state
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+
+  // Add Photo Modal state & data
+  const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false);
+  const [newPhotoData, setNewPhotoData] = useState({
+    title: '',
+    tag: 'Setback Compliance',
+    url: '',
+    geotag: '',
+    notes: ''
+  });
 
   // Current logged in officer info
   const officerName = currentUser?.name || "Sanjay Deshmukh (Municipal Officer)";
@@ -318,6 +332,65 @@ export default function MunicipalOfficerDashboard({ currentUser }) {
     showFeedback("Inspection photo removed.", 'info');
   };
 
+  // Handler: Add Photo manually (via URL or Form)
+  const handleAddPhotoManual = (e) => {
+    e?.preventDefault?.();
+    if (!selectedProperty) return;
+    if (!newPhotoData.title.trim() && !newPhotoData.url.trim()) {
+      showFeedback("Please provide a photo title or image link.", 'error');
+      return;
+    }
+
+    const now = new Date().toLocaleString('en-IN', { 
+      day: '2-digit', 
+      month: 'short', 
+      year: 'numeric', 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+
+    const addedPhoto = {
+      id: `PHT-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      title: newPhotoData.title.trim() || "Field Inspection Photo",
+      tag: newPhotoData.tag || "Field Verification",
+      url: newPhotoData.url.trim() || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='400' height='250' fill='%230f172a'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23f59e0b' font-family='sans-serif' font-weight='bold' font-size='15'>PHOTO EVIDENCE RECORDED</text></svg>",
+      timestamp: `${now}`,
+      geotag: newPhotoData.geotag.trim() || `${selectedProperty.zone || '28.4595° N, 77.0266° E'}`,
+      notes: newPhotoData.notes.trim() || `Recorded by ${officerName}`
+    };
+
+    setProperties(prev => prev.map(p => {
+      if (p.propertyId === selectedProperty.propertyId) {
+        return {
+          ...p,
+          photos: [addedPhoto, ...(p.photos || [])]
+        };
+      }
+      return p;
+    }));
+
+    setIsAddPhotoModalOpen(false);
+    setNewPhotoData({
+      title: '',
+      tag: 'Setback Compliance',
+      url: '',
+      geotag: '',
+      notes: ''
+    });
+    showFeedback("Inspection evidence photo added successfully.", 'success');
+  };
+
+  const handleOpenAddPhotoForSlot = (slotTitle, slotTag, defaultNotes) => {
+    setNewPhotoData({
+      title: slotTitle,
+      tag: slotTag,
+      url: '',
+      geotag: '28.4595° N, 77.0266° E (Site Peg)',
+      notes: defaultNotes || ''
+    });
+    setIsAddPhotoModalOpen(true);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-4 space-y-5 font-sans">
       {/* Toast Feedback Notification */}
@@ -386,8 +459,56 @@ export default function MunicipalOfficerDashboard({ currentUser }) {
         </div>
       </div>
 
-      {/* KPI Stats Bar with Sovereign Status Counters */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+      {/* Sub-Module Navigation Switcher */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-2.5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setActiveSubModule('verification')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center space-x-2 cursor-pointer ${
+              activeSubModule === 'verification'
+                ? 'bg-amber-500 text-slate-950 shadow-sm'
+                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+            }`}
+          >
+            <Building className="w-4 h-4" />
+            <span>Property Verification Queue</span>
+            <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
+              activeSubModule === 'verification' ? 'bg-slate-950 text-amber-400' : 'bg-slate-200 text-slate-700'
+            }`}>
+              {properties.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveSubModule('documents')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center space-x-2 cursor-pointer ${
+              activeSubModule === 'documents'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            <span>LAO Statutory Document Management</span>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+              activeSubModule === 'documents' ? 'bg-white text-indigo-700' : 'bg-indigo-100 text-indigo-700'
+            }`}>
+              6 Docs
+            </span>
+          </button>
+        </div>
+
+        <div className="hidden sm:flex items-center space-x-2 text-xs text-slate-500 font-medium px-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Municipal Portal Active • {officerName}</span>
+        </div>
+      </div>
+
+      {activeSubModule === 'documents' ? (
+        <LAODocumentManagement currentUser={currentUser} properties={properties} />
+      ) : (
+        <>
+          {/* KPI Stats Bar with Sovereign Status Counters */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
         {/* Total Properties */}
         <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs flex items-center justify-between">
           <div>
@@ -961,21 +1082,21 @@ export default function MunicipalOfficerDashboard({ currentUser }) {
               </div>
             </div>
 
-            {/* 5. Inspection Photos Module (Upload, Preview & Lightbox) */}
+            {/* 5. Inspection Photos Module (Upload, Add & Evidence Layout) */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
                 <div>
                   <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center space-x-1.5">
                     <Camera className="w-4 h-4 text-amber-600" />
-                    <span>Inspection Photos & Visual Evidence</span>
+                    <span>Inspection Photos &amp; Visual Evidence</span>
                   </h3>
                   <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
-                    Upload geotagged field photos, structural elevation, and RoW setback evidence
+                    Upload or attach geotagged field photos, structural elevation, and RoW setback evidence
                   </p>
                 </div>
 
-                {/* Upload Button */}
-                <div className="relative">
+                {/* Upload & Add Buttons */}
+                <div className="flex items-center space-x-2">
                   <input
                     type="file"
                     id="photo-upload-input"
@@ -989,76 +1110,232 @@ export default function MunicipalOfficerDashboard({ currentUser }) {
                     className="bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center space-x-1.5 transition-all shadow-xs cursor-pointer"
                   >
                     <Upload className="w-3.5 h-3.5 text-slate-950 stroke-[2.5]" />
-                    <span>Upload Inspection Photos</span>
+                    <span>Upload From Device</span>
                   </label>
+
+                  <button
+                    onClick={() => {
+                      setNewPhotoData({
+                        title: '',
+                        tag: 'Setback Compliance',
+                        url: '',
+                        geotag: '28.4595° N, 77.0266° E (Site Peg)',
+                        notes: ''
+                      });
+                      setIsAddPhotoModalOpen(true);
+                    }}
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs px-3.5 py-2 rounded-xl font-bold flex items-center space-x-1.5 transition-all border border-slate-200 cursor-pointer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-600" />
+                    <span>Add Photo Link</span>
+                  </button>
                 </div>
               </div>
 
-              {/* Photos Gallery Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
-                {(selectedProperty.photos || []).map((photo) => (
+              {/* Photo Evidence Slots & Layout */}
+              {(!selectedProperty.photos || selectedProperty.photos.length === 0) ? (
+                <div className="space-y-4">
+                  {/* Empty state Dropzone */}
                   <div 
-                    key={photo.id}
-                    className="group relative bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-xs"
+                    onClick={() => document.getElementById('photo-upload-input')?.click()}
+                    className="p-8 text-center border-2 border-dashed border-slate-300 hover:border-amber-500 bg-slate-50/60 hover:bg-amber-50/20 rounded-2xl transition-all cursor-pointer group space-y-2"
                   >
-                    {/* Thumbnail Image */}
-                    <div className="aspect-video w-full overflow-hidden bg-slate-950 relative">
-                      <img
-                        src={photo.url}
-                        alt={photo.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          // Fallback placeholder image
-                          e.target.src = "https://images.unsplash.com/photo-1541888946425-d0fbb18615f3?auto=format&fit=crop&w=800&q=80";
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5 justify-between">
-                        <button
-                          onClick={() => setActivePhotoModal(photo)}
-                          className="bg-white/90 hover:bg-white text-slate-900 p-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-sm cursor-pointer"
-                        >
-                          <Maximize2 className="w-3.5 h-3.5" />
-                          <span>Inspect</span>
-                        </button>
-                        <button
-                          onClick={() => handleDeletePhoto(photo.id)}
-                          title="Remove photo"
-                          className="bg-rose-600 hover:bg-rose-700 text-white p-1.5 rounded-lg shadow-sm cursor-pointer"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                    <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-200 text-amber-700 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform shadow-xs">
+                      <Camera className="w-6 h-6 text-amber-700" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-black text-slate-800">
+                        Drag &amp; drop inspection photos here, or <span className="text-amber-600 underline">browse files</span>
                       </div>
-
-                      {/* Photo Tag Badge */}
-                      <span className="absolute top-2 left-2 text-[9px] font-black uppercase px-2 py-0.5 rounded bg-slate-950/80 text-amber-400 backdrop-blur-xs font-mono border border-slate-800">
-                        {photo.tag}
+                      <p className="text-[11px] text-slate-500 mt-0.5">
+                        Upload field camera shots, drone cadastral orthophotos, or geo-pegging snapshots (JPG, PNG, WebP)
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 pt-1">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600">
+                        Max 15MB/file
+                      </span>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600">
+                        GPS Geotag Auto-Extraction
                       </span>
                     </div>
+                  </div>
 
-                    {/* Metadata Strip below photo */}
-                    <div className="p-2.5 bg-white text-slate-800 space-y-1">
-                      <div className="text-xs font-bold truncate text-slate-900">
-                        {photo.title}
+                  {/* Statutory Evidence Template Slots */}
+                  <div>
+                    <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center justify-between">
+                      <span>Statutory Required Photo Slots for {selectedProperty.propertyId}</span>
+                      <span className="text-amber-700 font-mono text-[10px]">3 Standard Angles</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {/* Slot 1: Front Elevation & RoW Setback */}
+                      <div className="border border-slate-200 bg-slate-50/70 rounded-xl p-3.5 flex flex-col justify-between space-y-3 hover:border-slate-300 transition-colors">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-mono">
+                              Mandatory Setback
+                            </span>
+                            <Camera className="w-3.5 h-3.5 text-slate-400" />
+                          </div>
+                          <div className="font-bold text-xs text-slate-900 leading-tight">
+                            Front Elevation &amp; RoW Setback
+                          </div>
+                          <p className="text-[10px] text-slate-500 leading-normal">
+                            Capture 4.5m front yard setback measurement with reference to right-of-way corridor.
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handleOpenAddPhotoForSlot(
+                            "Front Elevation & RoW Setback Buffer", 
+                            "Setback Compliance",
+                            "Front setback verified with laser tape."
+                          )}
+                          className="w-full bg-white hover:bg-amber-50 text-slate-800 hover:text-amber-900 border border-slate-300 hover:border-amber-400 py-1.5 px-2 rounded-lg text-xs font-bold flex items-center justify-center space-x-1 transition-colors cursor-pointer shadow-2xs"
+                        >
+                          <Upload className="w-3 h-3 text-amber-600" />
+                          <span>+ Add Photo</span>
+                        </button>
                       </div>
-                      <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
-                        <span className="flex items-center space-x-1 truncate">
-                          <MapPin className="w-2.5 h-2.5 text-amber-600 shrink-0" />
-                          <span className="truncate">{photo.geotag || 'GPS Tagged'}</span>
-                        </span>
-                        <span className="shrink-0">{photo.timestamp?.split(',')[0]}</span>
+
+                      {/* Slot 2: Cadastral Boundary Marker Peg */}
+                      <div className="border border-slate-200 bg-slate-50/70 rounded-xl p-3.5 flex flex-col justify-between space-y-3 hover:border-slate-300 transition-colors">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono">
+                              Boundary Validation
+                            </span>
+                            <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                          </div>
+                          <div className="font-bold text-xs text-slate-900 leading-tight">
+                            Cadastral Boundary Peg #01
+                          </div>
+                          <p className="text-[10px] text-slate-500 leading-normal">
+                            Photograph fixed pillar/peg corner aligning with DILRMP ULPIN cadastral map.
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handleOpenAddPhotoForSlot(
+                            "Municipal Boundary Pillar Peg", 
+                            "Cadastral Boundary",
+                            "ULPIN benchmark monument verified firmly intact."
+                          )}
+                          className="w-full bg-white hover:bg-amber-50 text-slate-800 hover:text-amber-900 border border-slate-300 hover:border-amber-400 py-1.5 px-2 rounded-lg text-xs font-bold flex items-center justify-center space-x-1 transition-colors cursor-pointer shadow-2xs"
+                        >
+                          <Upload className="w-3 h-3 text-amber-600" />
+                          <span>+ Add Photo</span>
+                        </button>
+                      </div>
+
+                      {/* Slot 3: Utility Corridor & Drainage Easement */}
+                      <div className="border border-slate-200 bg-slate-50/70 rounded-xl p-3.5 flex flex-col justify-between space-y-3 hover:border-slate-300 transition-colors">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-mono">
+                              Easement Check
+                            </span>
+                            <Layers className="w-3.5 h-3.5 text-slate-400" />
+                          </div>
+                          <div className="font-bold text-xs text-slate-900 leading-tight">
+                            Side Access &amp; Utility Easement
+                          </div>
+                          <p className="text-[10px] text-slate-500 leading-normal">
+                            Verify side setback and clear access lane free of unauthorized sheds or overhangs.
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handleOpenAddPhotoForSlot(
+                            "Structure Side Access & Drainage Easement", 
+                            "Utility Easement",
+                            "Clear side passage without unauthorized temporary shed."
+                          )}
+                          className="w-full bg-white hover:bg-amber-50 text-slate-800 hover:text-amber-900 border border-slate-300 hover:border-amber-400 py-1.5 px-2 rounded-lg text-xs font-bold flex items-center justify-center space-x-1 transition-colors cursor-pointer shadow-2xs"
+                        >
+                          <Upload className="w-3 h-3 text-amber-600" />
+                          <span>+ Add Photo</span>
+                        </button>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ) : (
+                /* Gallery Grid when photos are uploaded */
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+                  {selectedProperty.photos.map((photo) => (
+                    <div 
+                      key={photo.id}
+                      className="group relative bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-xs"
+                    >
+                      {/* Thumbnail Image */}
+                      <div className="aspect-video w-full overflow-hidden bg-slate-950 relative">
+                        <img
+                          src={photo.url}
+                          alt={photo.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='400' height='250' fill='%230f172a'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23f59e0b' font-family='sans-serif' font-weight='bold' font-size='14'>PHOTO RECORDED</text></svg>";
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5 justify-between">
+                          <button
+                            onClick={() => setActivePhotoModal(photo)}
+                            className="bg-white/90 hover:bg-white text-slate-900 p-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-sm cursor-pointer"
+                          >
+                            <Maximize2 className="w-3.5 h-3.5" />
+                            <span>Inspect</span>
+                          </button>
+                          <button
+                            onClick={() => handleDeletePhoto(photo.id)}
+                            title="Remove photo"
+                            className="bg-rose-600 hover:bg-rose-700 text-white p-1.5 rounded-lg shadow-sm cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
 
-              {(!selectedProperty.photos || selectedProperty.photos.length === 0) && (
-                <div className="p-8 text-center border-2 border-dashed border-slate-200 rounded-xl space-y-2">
-                  <Camera className="w-8 h-8 text-slate-300 mx-auto" />
-                  <div className="text-xs font-bold text-slate-600">No inspection photos uploaded yet</div>
-                  <p className="text-[11px] text-slate-400">
-                    Use the upload button above to attach on-site field photos or drone camera snapshots.
-                  </p>
+                        {/* Photo Tag Badge */}
+                        <span className="absolute top-2 left-2 text-[9px] font-black uppercase px-2 py-0.5 rounded bg-slate-950/80 text-amber-400 backdrop-blur-xs font-mono border border-slate-800">
+                          {photo.tag}
+                        </span>
+                      </div>
+
+                      {/* Metadata Strip below photo */}
+                      <div className="p-2.5 bg-white text-slate-800 space-y-1">
+                        <div className="text-xs font-bold truncate text-slate-900">
+                          {photo.title}
+                        </div>
+                        <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                          <span className="flex items-center space-x-1 truncate">
+                            <MapPin className="w-2.5 h-2.5 text-amber-600 shrink-0" />
+                            <span className="truncate">{photo.geotag || 'GPS Tagged'}</span>
+                          </span>
+                          <span className="shrink-0">{photo.timestamp?.split(',')[0]}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Add Another Photo Card */}
+                  <div
+                    onClick={() => {
+                      setNewPhotoData({
+                        title: '',
+                        tag: 'Field Verification',
+                        url: '',
+                        geotag: '28.4595° N, 77.0266° E (Site Peg)',
+                        notes: ''
+                      });
+                      setIsAddPhotoModalOpen(true);
+                    }}
+                    className="border-2 border-dashed border-slate-300 hover:border-amber-500 bg-slate-50 hover:bg-amber-50/30 rounded-xl p-4 flex flex-col items-center justify-center space-y-2 cursor-pointer transition-all aspect-video"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                      <Camera className="w-4 h-4" />
+                    </div>
+                    <div className="text-xs font-bold text-slate-700">+ Add Another Photo</div>
+                    <div className="text-[10px] text-slate-400 text-center">Upload file or paste link</div>
+                  </div>
                 </div>
               )}
             </div>
@@ -1257,6 +1534,134 @@ export default function MunicipalOfficerDashboard({ currentUser }) {
         </div>
       )}
 
+      {/* ADD PHOTO EVIDENCE MODAL */}
+      {isAddPhotoModalOpen && selectedProperty && (
+        <div className="fixed inset-0 z-[3000] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 text-slate-900 relative">
+            <button
+              onClick={() => setIsAddPhotoModalOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center space-x-2.5 border-b border-slate-100 pb-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                <Camera className="w-5 h-5 text-amber-700" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-slate-900">Add Inspection Photo Evidence</h3>
+                <p className="text-[11px] text-slate-500 font-medium">Property: {selectedProperty.propertyId} • {selectedProperty.municipality}</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleAddPhotoManual} className="space-y-3.5 text-xs">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+                  Photo Title / Description *
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Front Setback Laser Measurement Peg #01"
+                  value={newPhotoData.title}
+                  onChange={(e) => setNewPhotoData(prev => ({ ...prev, title: e.target.value }))}
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 font-medium focus:outline-none focus:border-amber-500"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+                    Evidence Category
+                  </label>
+                  <select
+                    value={newPhotoData.tag}
+                    onChange={(e) => setNewPhotoData(prev => ({ ...prev, tag: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-slate-900 font-semibold focus:outline-none focus:border-amber-500"
+                  >
+                    <option value="Setback Compliance">Setback Compliance</option>
+                    <option value="Cadastral Boundary">Cadastral Boundary</option>
+                    <option value="Structural Integrity">Structural Integrity</option>
+                    <option value="Utility Easement">Utility Easement</option>
+                    <option value="Encroachment Evidence">Encroachment Evidence</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+                    Geotag / GPS Coordinate
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 28.4595° N, 77.0266° E"
+                    value={newPhotoData.geotag}
+                    onChange={(e) => setNewPhotoData(prev => ({ ...prev, geotag: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 font-mono text-[11px] focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+                  Photo Link / Image URL (Optional or upload local file below)
+                </label>
+                <div className="relative">
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                  <input
+                    type="url"
+                    placeholder="https://... or paste image URL / data URI"
+                    value={newPhotoData.url}
+                    onChange={(e) => setNewPhotoData(prev => ({ ...prev, url: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg pl-8 pr-3 py-2 text-slate-900 text-xs focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+                  Officer Field Notes
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Record laser measurements, pillar condition, or bylaw observation..."
+                  value={newPhotoData.notes}
+                  onChange={(e) => setNewPhotoData(prev => ({ ...prev, notes: e.target.value }))}
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 text-xs focus:outline-none focus:border-amber-500 resize-none"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-between border-t border-slate-100">
+                <label 
+                  htmlFor="photo-upload-input"
+                  onClick={() => setIsAddPhotoModalOpen(false)}
+                  className="text-amber-700 hover:text-amber-800 font-bold text-xs flex items-center space-x-1 cursor-pointer"
+                >
+                  <Upload className="w-3.5 h-3.5" />
+                  <span>Choose local file instead</span>
+                </label>
+
+                <div className="flex items-center space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddPhotoModalOpen(false)}
+                    className="px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-amber-500 hover:bg-amber-600 text-slate-950 px-4 py-2 rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+                  >
+                    Add Evidence Photo
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* PHOTO LIGHTBOX MODAL */}
       {activePhotoModal && (
         <div className="fixed inset-0 z-[3000] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
@@ -1403,6 +1808,8 @@ export default function MunicipalOfficerDashboard({ currentUser }) {
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

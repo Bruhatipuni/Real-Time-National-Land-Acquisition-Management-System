@@ -40,6 +40,8 @@ export default function Navbar({
     badge: 'FIELD INSPECTOR'
   };
 
+  const isMunicipalOfficer = roleObj?.id === 'MUNICIPAL_OFFICER';
+
   const userName = currentUser?.name || roleObj.user || 'Anish Kumar (Senior Surveyor)';
   const userSubtitle = roleObj.title || 'Field Surveyor & GIS Nodal';
 
@@ -120,7 +122,7 @@ export default function Navbar({
           {/* Left: Logo + FIELD INSPECTOR + Tagline */}
           <div 
             className="flex items-center space-x-3 cursor-pointer group"
-            onClick={() => setActiveTab('gis')}
+            onClick={() => setActiveTab(isMunicipalOfficer ? 'municipal' : 'gis')}
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-600 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/20 shrink-0 group-hover:scale-105 transition-transform">
               <Building2 className="w-6 h-6 text-slate-950" />
@@ -257,18 +259,20 @@ export default function Navbar({
               <span>Route Simulator</span>
             </button>
 
-            {/* 4. Municipal Property Verification */}
-            <button
-              onClick={() => setActiveTab('municipal')}
-              className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-                activeTab === 'municipal'
-                  ? 'bg-amber-500 text-slate-950 shadow-xs'
-                  : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
-              }`}
-            >
-              <Building className={`w-3.5 h-3.5 ${activeTab === 'municipal' ? 'text-slate-950' : 'text-amber-600'}`} />
-              <span>Municipal Property Verification</span>
-            </button>
+            {/* 4. Municipal Property Verification - Strictly visible ONLY for Municipal Officer */}
+            {isMunicipalOfficer && (
+              <button
+                onClick={() => setActiveTab('municipal')}
+                className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  activeTab === 'municipal'
+                    ? 'bg-amber-500 text-slate-950 shadow-xs'
+                    : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
+                }`}
+              >
+                <Building className={`w-3.5 h-3.5 ${activeTab === 'municipal' ? 'text-slate-950' : 'text-amber-600'}`} />
+                <span>Municipal Property Verification</span>
+              </button>
+            )}
 
             {/* Additional Modules Dropdown (To preserve existing features) */}
             <div className="relative group">
@@ -280,13 +284,6 @@ export default function Navbar({
               </button>
 
               <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-slate-900 border border-slate-800 shadow-2xl rounded-xl overflow-hidden z-50 py-1 mt-0.5">
-                <div 
-                  onClick={() => setActiveTab('municipal')}
-                  className={`px-3 py-2 text-xs flex items-center space-x-2 text-slate-300 hover:bg-slate-800 cursor-pointer ${activeTab === 'municipal' ? 'text-amber-400 font-bold' : ''}`}
-                >
-                  <Building className="w-3.5 h-3.5 text-orange-400" />
-                  <span>Municipal Property Verification</span>
-                </div>
                 <div 
                   onClick={() => setActiveTab('workflow')}
                   className={`px-3 py-2 text-xs flex items-center space-x-2 text-slate-300 hover:bg-slate-800 cursor-pointer ${activeTab === 'workflow' ? 'text-amber-400 font-bold' : ''}`}
